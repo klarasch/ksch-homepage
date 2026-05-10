@@ -1409,7 +1409,7 @@ if (heroStaffHost) {
     const dt = now - lastHoverTick;
     lastHoverTick = now;
     if (dt < 200) hoverAccum += dt; else hoverAccum = 0;
-    if (hoverAccum > 700) {
+    if (hoverAccum > 400) {
       showToast();
       hoverAccum = 0;
     }
