@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Klára Scholleová — Staff Product Designer</title>
 <meta name="description" content="Staff Product Designer focused on cybersecurity, AI and enterprise systems. Currently at SentinelOne." />
+<meta property="og:title" content="Klára Scholleová — Staff Product Designer" />
+<meta property="og:description" content="Staff Product Designer focused on cybersecurity, AI and enterprise systems. Currently at SentinelOne." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ksch.cz/" />
+<meta name="twitter:card" content="summary" />
 <meta http-equiv="Content-Security-Policy"
 content="
 default-src 'self';
@@ -554,6 +559,8 @@ connect-src 'self';
     grid-row: span 2;
     background: var(--paper-2);
   }
+  /* Last cell fills the leftover row so the grid has no empty hole */
+  .sq-grid > .sq-cell:last-child { grid-column: 1 / -1; }
   /* Diagonal "coming soon" stripes on non-feature cells */
   .sq-cell:not(.sq-feature)::before {
     content: "";
@@ -840,7 +847,7 @@ connect-src 'self';
 
 <div class="shell">
   <div class="topbar">
-    <span class="logo">KS / Portfolio 2026</span>
+    <span class="logo">KS</span>
     <nav>
       <a href="#about">About</a>
       <a href="#experience">Experience</a>
@@ -934,7 +941,7 @@ connect-src 'self';
   <div class="shell">
     <div class="sec-head">
       <div class="sec-num reveal">02 / Selected experience</div>
-      <h2 class="sec-title reveal" data-stagger="1">5+ years of cracking untrivial problems.</h2>
+      <h2 class="sec-title reveal" data-stagger="1">Complex systems for technical users — from cybersecurity to developer tooling.</h2>
     </div>
 
     <div class="xp-list">
@@ -1063,9 +1070,6 @@ connect-src 'self';
       </div>
     </div>
 
-    <p class="sq-footer reveal" data-stagger="4">
-      Most of these are still hiding in approximately seventeen folders and three unfinished side quests.
-    </p>
   </div>
 </section>
 
@@ -1082,9 +1086,9 @@ connect-src 'self';
         <p>I also help non-profits with UX strategy, website audits, information architecture and improving the clarity of digital products.</p>
 
         <div class="pricing">
-          <span class="label">Pricing</span>
-          <span class="price">2 500 CZK / hour</span>
-          <span class="note">free for non-profits</span>
+          <span class="label">Engagements</span>
+          <span class="price">Free for non-profits</span>
+          <span class="note">commercial rates on request</span>
         </div>
       </div>
 
