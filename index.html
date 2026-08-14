@@ -559,8 +559,13 @@ connect-src 'self';
     grid-row: span 2;
     background: var(--paper-2);
   }
-  /* Last cell fills the leftover row so the grid has no empty hole */
-  .sq-grid > .sq-cell:last-child { grid-column: 1 / -1; }
+  /* Live cells (published work) drop the coming-soon stripes */
+  .sq-cell.sq-live::before { content: none; }
+  /* Last cell fills the leftover slot so the grid has no empty hole */
+  .sq-grid > .sq-cell:last-child { grid-column: span 2; }
+  @media (max-width: 820px) {
+    .sq-grid > .sq-cell:last-child { grid-column: auto; }
+  }
   /* Diagonal "coming soon" stripes on non-feature cells */
   .sq-cell:not(.sq-feature)::before {
     content: "";
@@ -1035,14 +1040,15 @@ connect-src 'self';
         </div>
       </div>
 
-      <div class="sq-cell reveal" data-stagger="1">
+      <div class="sq-cell sq-live reveal" data-stagger="1">
         <div class="sq-meta">
           <span class="sq-num">SQ / 02</span>
-          <span class="sq-status">Soon</span>
+          <span class="sq-status">In review</span>
         </div>
         <div class="sq-content">
-          <h3 class="sq-title">AI-native experiments</h3>
-          <p class="sq-desc">Vibe-coded tools and design system automation.</p>
+          <h3 class="sq-title">Jak do UX — edice 2026</h3>
+          <p class="sq-desc">My long-form Czech guide for aspiring UX designers, updated for the AI era. Published as a draft — currently in review, feedback welcome.</p>
+          <a href="/jak-do-ux/" class="sq-link">Read the draft (CZ) ↗</a>
         </div>
       </div>
 
@@ -1052,14 +1058,25 @@ connect-src 'self';
           <span class="sq-status">Soon</span>
         </div>
         <div class="sq-content">
-          <h3 class="sq-title">Photography</h3>
-          <p class="sq-desc">Personal archive — climbing, light, travel.</p>
+          <h3 class="sq-title">AI-native experiments</h3>
+          <p class="sq-desc">Vibe-coded tools and design system automation.</p>
         </div>
       </div>
 
       <div class="sq-cell reveal" data-stagger="3">
         <div class="sq-meta">
           <span class="sq-num">SQ / 04</span>
+          <span class="sq-status">Soon</span>
+        </div>
+        <div class="sq-content">
+          <h3 class="sq-title">Photography</h3>
+          <p class="sq-desc">Personal archive — climbing, light, travel.</p>
+        </div>
+      </div>
+
+      <div class="sq-cell reveal" data-stagger="4">
+        <div class="sq-meta">
+          <span class="sq-num">SQ / 05</span>
           <span class="sq-status">Soon</span>
         </div>
         <div class="sq-content">

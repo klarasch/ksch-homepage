@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jak do UX — edice 2026</title>
+<meta name="description" content="Subjektivní, nespisovnej a upřímnej guide pro aspirující UXáky — v době, kdy AI generuje obrazovky a výmluvy umřely. Od Kláry Scholleový.">
+<meta property="og:title" content="Jak do UX — edice 2026">
+<meta property="og:description" content="Vygenerovat věc je snadný. Odladit experience je ta práce. Upřímnej guide, jak se dostat do UX.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ksch.cz/jak-do-ux/">
+<link rel="canonical" href="https://ksch.cz/jak-do-ux/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23d1240f' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* ============================================================
+   JAK DO UX · 2026 — „šitá vazba"
+   listy papíru (vrstvy) sešitý jednou červenou nití
+   ============================================================ */
+:root{
+  --ink:#17150f;
+  --paper:#fcfbf9;
+  --red:#d1240f;
+  --red-soft:rgba(209,36,15,.14);
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'Archivo',-apple-system,sans-serif;
+  --pad:clamp(22px,5vw,72px);
+  --maxw:820px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--ink);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:clamp(15.5px,1.05vw + 10px,17.5px);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--red);color:#fff}
+
+a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--red)}
+strong{font-weight:700}
+em{font-style:italic}
+
+/* ---------- červená nit: levá kolejnice ---------- */
+.rail{
+  position:fixed;left:clamp(8px,2vw,26px);top:0;bottom:0;width:2px;
+  background:var(--red-soft);z-index:90;
+}
+.rail .fill{
+  position:absolute;top:0;left:0;width:100%;height:0%;
+  background:var(--red);transition:height .1s linear;
+}
+.rail .knot{
+  position:absolute;left:50%;transform:translate(-50%,-50%);
+  width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--red);
+  cursor:pointer;transition:transform .2s ease, background .2s ease;
+}
+.rail .knot:hover{transform:translate(-50%,-50%) scale(1.5);background:var(--red)}
+.rail .knot.passed{background:var(--red)}
+.rail .hit{position:absolute;top:0;bottom:0;left:-12px;right:-16px;touch-action:none;cursor:grab}
+.rail.scrubbing .hit{cursor:grabbing}
+.rail .knot::after{
+  content:attr(data-label);position:absolute;left:18px;top:50%;
+  transform:translateY(-50%) translateX(-6px);
+  background:var(--ink);color:#fcfbf9;font-family:var(--mono);font-size:11px;
+  padding:5px 10px;border-radius:4px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;
+}
+.rail .knot:hover::after,.rail .knot.show::after{opacity:1;transform:translateY(-50%)}
+
+/* ---------- listy ---------- */
+.sheet{
+  position:relative;
+  border-radius:26px 26px 0 0;
+  margin-top:-28px;
+  padding:calc(var(--pad) + 28px) var(--pad) calc(var(--pad) + 10px);
+  box-shadow:0 -2px 6px rgba(23,21,15,.06), 0 -16px 36px rgba(23,21,15,.13);
+}
+.sheet:first-of-type{margin-top:0;border-radius:0;padding-top:var(--pad)}
+.sheet-inner{max-width:var(--maxw);margin:0 auto;position:relative}
+
+/* šev — prošití nití na hraně každýho listu */
+.sheet:not(:first-of-type)::before{
+  content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:min(200px,44%);height:2px;
+  background:repeating-linear-gradient(90deg,var(--red) 0 11px,transparent 11px 20px);
+  opacity:.85;
+}
+
+/* tonální cesta: papír → inkoust (jemná) */
+.t0{background:#fcfbf9}
+.t1{background:#f9f7f3}
+.t2{background:#f6f3ed}
+.t3{background:#f2efe7}
+.t4{background:#eeeae1}
+.t5{background:#eae5da}
+.t6{background:#e5e0d3}
+.t-ink{background:#14120d;color:#f0ede6}
+.t-ink a:hover{color:#ff6a55}
+.t-ink ::selection{background:#fff;color:var(--ink)}
+
+/* ---------- typografie ---------- */
+.numeral{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--red);
+  display:flex;align-items:center;gap:10px;margin-bottom:26px;font-weight:500;
+}
+.numeral::after{content:"";flex:1;height:1px;background:currentColor;opacity:.3}
+h2{
+  font-weight:850;font-stretch:100%;
+  font-size:clamp(1.9rem,5.5vw,3.2rem);
+  line-height:1.02;letter-spacing:-.025em;margin-bottom:26px;
+}
+h3{
+  font-weight:750;font-size:clamp(1.12rem,2.4vw,1.35rem);
+  letter-spacing:-.01em;margin:34px 0 10px;
+}
+p{margin-bottom:14px;max-width:64ch}
+ul,ol{margin:0 0 16px 22px;max-width:62ch}
+li{margin-bottom:9px}
+li::marker{color:var(--red)}
+
+.kicker{font-family:var(--mono);font-size:13px;color:rgba(23,21,15,.55);margin:-16px 0 22px}
+.t-ink .kicker{color:rgba(240,237,230,.55)}
+
+/* diff — škrtnutý 2024 pravdy */
+.strike{
+  text-decoration:line-through;text-decoration-color:var(--red);
+  text-decoration-thickness:2.5px;color:rgba(23,21,15,.45);
+}
+.u{position:relative;white-space:nowrap}
+.u::after{
+  content:"";position:absolute;left:-1px;right:-1px;bottom:-3px;height:2.5px;background:var(--red);
+  transform-origin:left;transition:transform .8s cubic-bezier(.7,0,.2,1) .3s;
+}
+.js .u::after{transform:scaleX(0)}
+.js .in .u::after{transform:scaleX(1)}
+
+/* aside — „tácek": kartička přišitá nití */
+.aside{
+  position:relative;background:rgba(255,255,255,.72);
+  border:1px solid rgba(23,21,15,.12);border-radius:10px;
+  padding:20px 22px;margin:28px 0;max-width:64ch;
+  box-shadow:0 2px 14px rgba(0,0,0,.05);
+}
+.aside::before{
+  content:"";position:absolute;top:-1px;left:22px;width:74px;height:2px;
+  background:repeating-linear-gradient(90deg,var(--red) 0 9px,transparent 9px 16px);
+}
+.aside .emoji{float:left;font-size:22px;margin:2px 12px 4px 0}
+.t-ink .aside{background:rgba(255,255,255,.06);border-color:rgba(240,237,230,.15)}
+
+blockquote{
+  border-left:2.5px solid var(--red);padding:4px 0 4px 20px;margin:26px 0;
+  font-style:italic;color:rgba(23,21,15,.75);max-width:60ch;
+}
+blockquote cite{display:block;font-style:normal;font-family:var(--mono);font-size:12.5px;margin-top:8px;color:rgba(23,21,15,.5)}
+
+/* reveal — skrývá se jen když běží JS (progressive enhancement) */
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ---------- hero / obálka ---------- */
+.cover{min-height:100svh;display:flex;flex-direction:column}
+.cover .bar{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
+  color:rgba(23,21,15,.55);padding-bottom:24px;
+}
+.cover h1{
+  font-weight:880;font-size:clamp(3.4rem,14vw,9.5rem);
+  line-height:.92;letter-spacing:-.04em;margin:auto 0 0;
+}
+.cover h1 .ux{color:var(--red)}
+.cover .thread-hero{display:block;width:100%;max-width:640px;margin:6px 0 2px}
+.cover .thread-hero path{
+  stroke:var(--red);fill:none;stroke-width:2;
+  stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 3.2s cubic-bezier(.6,0,.3,1) forwards .5s;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cover .sub{font-size:clamp(1rem,2.2vw,1.25rem);max-width:44ch;color:rgba(23,21,15,.8);margin-bottom:30px}
+.cover .toc{
+  margin-top:auto;padding-top:26px;border-top:1px solid rgba(23,21,15,.14);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px 26px;
+  font-family:var(--mono);font-size:12.5px;
+}
+.cover .toc a{
+  text-decoration:none;color:rgba(23,21,15,.7);display:flex;gap:9px;align-items:baseline;padding:4px 0;
+}
+.cover .toc a b{color:var(--red);font-weight:500}
+.cover .toc a:hover{color:var(--ink);transform:translateX(3px)}
+.cover .toc a{transition:transform .2s ease,color .2s ease}
+.cover .hint{font-family:var(--mono);font-size:11px;color:rgba(23,21,15,.45);margin-top:22px;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(4px)}}
+
+/* ---------- draft disclaimer ---------- */
+.draft-note{
+  font-family:var(--mono);font-size:12.5px;line-height:1.55;
+  color:rgba(23,21,15,.75);
+  border:1.5px dashed var(--red);border-radius:10px;
+  padding:12px 16px;margin:22px 0 26px;max-width:56ch;
+  background:var(--red-soft);
+}
+.draft-note b{color:var(--red);font-weight:500;letter-spacing:.08em}
+.draft-note a{color:inherit}
+
+/* ---------- velký claim s nití ---------- */
+.claim{
+  font-weight:800;font-size:clamp(1.45rem,4vw,2.3rem);line-height:1.15;
+  letter-spacing:-.02em;margin:30px 0 24px;max-width:26ch;
+}
+
+/* thread mezi odstavci (SVG oddělovač) */
+.thread-sep{display:block;width:min(420px,80%);margin:34px 0 26px}
+.thread-sep path{
+  stroke:var(--red);fill:none;stroke-width:1.8;
+  stroke-dasharray:600;transition:stroke-dashoffset 1.6s cubic-bezier(.6,0,.3,1) .2s;
+}
+.js .thread-sep path{stroke-dashoffset:600}
+.js .in .thread-sep path,.js .thread-sep.in path{stroke-dashoffset:0}
+
+/* kroužek kolem slova */
+.circle-w{position:relative;white-space:nowrap}
+.circle-w svg{position:absolute;inset:-38% -14%;width:128%;height:176%;overflow:visible;pointer-events:none}
+.circle-w svg path{
+  stroke:var(--red);fill:none;stroke-width:2;
+  stroke-dasharray:400;transition:stroke-dashoffset 1.2s ease .5s;
+}
+.js .circle-w svg path{stroke-dashoffset:400}
+.js .in .circle-w svg path{stroke-dashoffset:0}
+
+/* ---------- slovníček chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 6px;max-width:none}
+.chip{
+  font-family:var(--sans);font-size:14px;font-weight:550;
+  border:1.5px solid var(--ink);background:transparent;color:inherit;
+  border-radius:999px;padding:6px 15px;cursor:pointer;
+  transition:all .18s ease;
+}
+.chip:hover{border-color:var(--red);color:var(--red);transform:rotate(-1deg)}
+.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.defbox{
+  min-height:86px;border-left:2.5px solid var(--red);
+  padding:14px 18px;margin-top:18px;max-width:64ch;
+  background:rgba(255,255,255,.5);border-radius:0 10px 10px 0;
+}
+.defbox .term{font-weight:750;margin-bottom:4px}
+.defbox p{margin:0;font-size:15px}
+
+/* ---------- zdroje ---------- */
+.res h3{display:flex;align-items:baseline;gap:12px}
+.res h3::after{content:"";flex:1;height:1px;background:rgba(23,21,15,.15)}
+details{margin:26px 0;max-width:64ch}
+details summary{
+  cursor:pointer;font-family:var(--mono);font-size:13.5px;color:var(--red);
+  list-style:none;display:flex;align-items:center;gap:10px;padding:10px 0;
+}
+details summary::before{content:"+";font-size:18px;transition:transform .25s ease}
+details[open] summary::before{transform:rotate(45deg)}
+details summary::-webkit-details-marker{display:none}
+
+/* ---------- outro ---------- */
+.outro{padding-bottom:calc(var(--pad) * 1.4)}
+.outro h2{font-size:clamp(2.2rem,7vw,4.2rem)}
+.knot-final{display:block;margin:36px 0 10px}
+.knot-final path,.knot-final circle{
+  stroke:var(--red);fill:none;stroke-width:2;
+  stroke-dasharray:900;transition:stroke-dashoffset 2.4s ease .3s;
+}
+.js .knot-final path,.js .knot-final circle{stroke-dashoffset:900}
+.js .in .knot-final path,.js .in .knot-final circle{stroke-dashoffset:0}
+.contacts{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:14px;margin:26px 0 40px}
+.sig{font-family:var(--mono);font-size:12px;color:rgba(240,237,230,.45);border-top:1px solid rgba(240,237,230,.14);padding-top:22px;max-width:none}
+
+/* ---------- scroll-driven bonusy ---------- */
+@supports (animation-timeline: view()){
+  .sheet:not(.t-ink){
+    animation:settle linear both;
+    animation-timeline:view();
+    animation-range:exit 0% exit 100%;
+    transform-origin:50% 100%; /* spodní hrana drží — žádný mikroškvíry */
+  }
+  @keyframes settle{to{transform:scale(.988);filter:brightness(.97)}}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .cover .thread-hero path,.thread-sep path,.circle-w svg path,.knot-final path,.knot-final circle{stroke-dashoffset:0}
+  .u::after{transform:scaleX(1)}
+}
+@media (max-width:640px){
+  .sheet{border-radius:18px 18px 0 0;margin-top:-20px;
+    padding:calc(var(--pad) + 24px) calc(var(--pad) + 4px) calc(var(--pad) + 8px) calc(var(--pad) + 24px)}
+  .cover .toc{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- červená nit: kolejnice s uzlama -->
+<nav class="rail" aria-label="Kapitoly"><div class="fill"></div></nav>
+
+<!-- ============ OBÁLKA ============ -->
+<header class="sheet t0 cover" id="top">
+  <div class="sheet-inner cover" style="min-height:calc(100svh - var(--pad)*2)">
+    <div class="bar">
+      <span>KLÁRA SCHOLLEOVÁ</span>
+      <span>EDICE 2026</span>
+    </div>
+    <h1>Jak do <span class="ux">UX</span></h1>
+    <svg class="thread-hero" viewBox="0 0 640 64" aria-hidden="true">
+      <path d="M0,14 C110,14 150,50 300,50 C420,50 440,18 560,18 L640,18"/>
+    </svg>
+    <p class="sub">Subjektivní, nespisovnej a upřímnej guide pro aspirující UXáky — v době, kdy AI generuje obrazovky a výmluvy umřely.</p>
+    <div class="draft-note" role="note">
+      <b>🧵 PRACOVNÍ VERZE — V REVIZI</b><br>
+      Tahle edice je čerstvě sešitá a ještě prochází revizí — něco se může změnit nebo úplně vypadnout.
+      Něco nesedí? <a href="mailto:klara.scholleova@gmail.com">Napište mi</a>, nebo mě chyťte na kempu.
+    </div>
+    <div class="toc">
+      <a href="#s1"><b>01</b> Úvod</a>
+      <a href="#s2"><b>02</b> Ukaž, že umíš shipovat</a>
+      <a href="#s3"><b>03</b> Jak bych na to šla já</a>
+      <a href="#s4"><b>04</b> Co se čeká od juniorů</a>
+      <a href="#s5"><b>05</b> Portfolio a CV</a>
+      <a href="#s6"><b>06</b> Slovníček</a>
+      <a href="#s7"><b>07</b> Zdroje</a>
+      <a href="#s8"><b>08</b> Outro</a>
+    </div>
+    <div class="hint">↓</div>
+  </div>
+</header>
+
+<!-- ============ 01 ÚVOD ============ -->
+<section class="sheet t1" id="s1">
+  <div class="sheet-inner">
+    <div class="numeral">01 · ÚVOD</div>
+    <h2 class="reveal">Nezávidim vám to.<br>Ale nevzdávejte to.</h2>
+    <p class="reveal">Přiznám se, že to začínajícím UXákům nezávidim. Zájemců o juniorní pozice je pořád bezprecedentní množství a s poptávkou jde i nabídka nepřebernýho množství bootcampů a knížecích rad (ne že bych tímhle trochu nepřidávala).</p>
+    <p class="reveal">Ale nevzdávejte to 💪 Šikovný a chytrý lidi se neztratěj — a upřímně, díky AI má šikovnej člověk dneska víc způsobů, jak <span class="u">vystoupit z davu</span>, než kdy dřív. O tom bude velká část týhle aktualizace.</p>
+    <h3 class="reveal">Pro koho to je</h3>
+    <p class="reveal"><strong>Předpokládám, že přemýšlíte o přechodu do UX</strong> z jiný profese. Primárně mluvím k těm, co chtěj navrhovat UI, ale většina platí i pro ostatní UX role nebo PMs, co chtěj ten přesah. Angličtina je nutnost.</p>
+    <h3 class="reveal">Disclaimer / můj bias</h3>
+    <p class="reveal"><strong>Tenhle text není instrukce a já dost možná nemám pravdu.</strong> Píšu to, jak bych vám to říkala v hospodě. Berte si jen to, co vám dává smysl, a validujte to s jinejma lidma.</p>
+    <p class="reveal">Píšu to po víc než sedmi letech v UX (a ještě delší době freelancingu v grafice, webdesignu a kódění), jako senior v globální produktový firmě — s výhledem do českýho rybníčku i s čerstvou zkušeností člověka, co posuzuje kandidáty od juniorů po seniory.</p>
+    <div class="aside reveal">
+      <span class="emoji">💡</span>
+      <strong>Nejlepší rada hned na začátek: přidejte se do <a href="https://www.asociaceux.cz/clenstvi-v-aux">Asociace UX</a>.</strong> Nejlíp investovaný pětikilo na týhle cestě — hlavně kvůli Slacku, kde jsou všichni super český UXáci, kvůli <a href="https://www.meetup.com/asociace-ux/">UX Mondays</a> a lidem, který potkáte na <a href="https://realuxcamp.com/">RealUXCampu</a>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 SHIP IT ============ -->
+<section class="sheet t2" id="s2">
+  <div class="sheet-inner">
+    <div class="numeral">02 · NOVÁ DOBA</div>
+    <h2 class="reveal">Ukaž, že umíš shipovat</h2>
+    <p class="reveal">Když jsem tenhle text psala poprvý (2024), platilo: nauč se základy, udělej si projekt, hezky ho odvyprávěj v portfoliu. To platí furt. Ale mezitím se stala zásadní věc: <strong>s AI nástrojema dneska naprototypuješ — a klidně nasadíš — funkční věc za víkend.</strong></p>
+    <p class="reveal">Což znamená jediný: <strong>výmluvy umřely.</strong> Dřív mohl junior říct <span class="strike">„neumím kódovat, tak mám jen mockupy do šuplíku"</span>. Dneska můžeš mít živou věc, kterou si lidi fakt osahali. A bacha — když ji můžeš mít ty, můžou ji mít i všichni ostatní kandidáti.</p>
+    <p class="claim reveal">Vygenerovat věc — to dneska dokáže každej. <span class="circle-w">Odladit experience<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M8,30 C8,8 192,4 192,26 C192,52 20,58 12,38"/></svg></span> je ta práce.</p>
+    <p class="reveal">A přesně tady se pozná designer: <strong>že z toho, co si dneska vygeneruje každej, umíš udělat něco inovativního.</strong> AI umí vyplivnout obrazovku. Neumí poznat, že je blbě.</p>
+    <p class="reveal">Junior roku 2026 se podle mě pozná takhle: vezme vygenerovanou věc, dá ji lidem do rukou, kouká, kde se zasekávaj, a iteruje. To je celej UX proces v kostce — a poprvý v historii ho můžeš mít v portfoliu <em>celej</em>: od problému přes nasazenou věc po reálnou zpětnou vazbu a iterace.</p>
+    <div class="aside reveal">
+      <span class="emoji">🔥</span>
+      <strong>Nový pravidlo: neshipnutej sideprojekt je jen prezka.</strong> Nejsilnější artefakt v portfoliu 2026 není caska s personama — je to odkaz na věc, co žije, a příběh o tom, cos na ní odladila.
+    </div>
+    <svg class="thread-sep" viewBox="0 0 420 30" aria-hidden="true"><path d="M0,16 C90,16 120,6 210,6 C300,6 330,24 420,24"/></svg>
+    <h3 class="reveal">Co to znamená prakticky</h3>
+    <ul class="reveal">
+      <li><strong>AI literacy je nová základní výbava.</strong> Umět s AI navrhovat, prototypovat, analyzovat výzkum — a hlavně chápat, kde AI kecá a kdy jí nevěřit. Hiring manažeři to budou čim dál víc čekat jako samozřejmost, podobně jako Figmu.</li>
+      <li><strong>Nástroje se měněj každej kvartál, princip ne.</strong> Dneska se mluví o Figma Make, Claude, Cursoru, v0, Lovable — za rok to může bejt jinak. Neučte se „nástroj", učte se ten workflow: problém → prompt → prototyp → test s lidma → iterace.</li>
+      <li><strong>Vibe-coded odpad není ship.</strong> Vygenerovat appku a hodit ji na net není to, o čem mluvím. Ship znamená: má to uživatele (klidně tři!), sledovalas, jak to používaj, a máš verzi 2, která je lepší — a víš proč.</li>
+      <li><strong>Cesta k řešení je taky design.</strong> Skill dobrýho designera je vymyslet, jak na konkrétní problém jít nejefektivnějc — co si jen načmárat na papír, co naklikat, co fakt postavit a s kým to otestovat. AI ti dá rychlost; kudy, to musíš rozhodnout ty.</li>
+      <li><strong>Judgment je to, co prodáváš.</strong> Čím víc toho AI vygeneruje, tím vzácnější je člověk, kterej pozná, co je dobrý, co špatně a proč. Trénink oka a myšlení je díky tomu důležitější, ne míň.</li>
+    </ul>
+    <div class="aside reveal">
+      <span class="emoji">🎤</span>
+      <strong>Co se dneska zkoumá na pohovorech?</strong> Kompletní přehled nemám — ale můžu říct, co vidím: otázku <em>„jak používáš AI"</em> dostávám i já. Mějte na ni odpověď s konkrétníma příkladama: kde vám AI práci zrychlila, kde kecala, a jak jste to poznali.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 JAK BYCH NA TO ŠLA ============ -->
+<section class="sheet t3" id="s3">
+  <div class="sheet-inner">
+    <div class="numeral">03 · STRATEGIE</div>
+    <h2 class="reveal">Jak bych na to (asi) šla já</h2>
+    <ol class="reveal">
+      <li><strong>Naučila bych se co nejvíc zadarmo</strong> z netu a knížek (viz <a href="#s7">Zdroje</a>) — a zjistila, jestli je ten obor vůbec pro mě. Start: Google kurz na YouTube, moje punkový webináře, nebo kurz Toma Pauluse. Knížky: <em>User Experience Team of One</em>, <em>Think First</em>, <em>Just Enough Research</em>.</li>
+      <li><strong>Trénovala bych mozek, oči a ruce</strong> — přemýšlení o problémech s tužkou v ruce, pořádná Figma jako řemeslo, cit pro hierarchii.</li>
+      <li><strong>Sehnala bych si projekt — a shipla ho.</strong> Dřív stačilo <span class="strike">„na něčem fakt pracovat"</span>, dneska bych to rovnou stavěla, testovala a iterovala (viz <a href="#s2">kapitola 02</a>).</li>
+      <li><strong>Sehnala bych si mentora</strong> (<a href="https://www.femmepalette.com/mentors">Femme Palette</a> — tam jsem jako dobrovolnej mentor i já — nebo <a href="https://adplist.org/">ADPList</a>), kterej mě usměrní.</li>
+      <li>K 1–4 bych přistupovala <strong>s cílem udělat ze sebe dobrýho juniora</strong> a získat práci.</li>
+      <li>A furt bych hledala, <strong>v čem se ještě můžu zlepšovat.</strong></li>
+    </ol>
+    <div class="aside reveal">
+      <span class="emoji">☝️</span>
+      <strong>Networkujte a choďte na akce.</strong> Žádná knížka ani bootcamp nenahradí pokec s lidma z oboru. <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> každý pondělí, <a href="https://realuxcamp.com/">RealUXCamp</a> jednou za rok, Slack Asociace UX pořád. Win-win: vy nasajete know-how — a oni si vás zapamatujou, až budou nabírat 😼
+    </div>
+    <h3 class="reveal">Bootcampy? Nevim. Vejšky? Máme</h3>
+    <p class="reveal">Můj skeptickej pohled na bootcampy platí: většinou učej kuchařku, kterou pak absolventi aplikujou na všechno bez posouzení kontextu, a hard skilly nedaj. Když už, vyberte si takovej, kde vaši práci hodnotí mentor, ne spolužáci. A vejšky — <a href="https://kisk.phil.muni.cz/profilace/design-informacnich-sluzeb">KISK MUNI</a>, <a href="https://fis.vse.cz/magisterske-studium/magisterske-programy/ux-vyzkum-a-design-ist/">UX magistr na VŠE</a>, <a href="https://oi.fel.cvut.cz/cs/mgr-specializace-interakce-cloveka-s-pocitacem-2016">HCI na FELu</a> — zůstávaj dobrá volba, pokud jste v tom životním stádiu.</p>
+    <svg class="thread-sep" viewBox="0 0 420 30" aria-hidden="true"><path d="M0,10 C120,10 150,24 240,24 C330,24 360,8 420,8"/></svg>
+    <h3 class="reveal">Btw, nemusí to bejt pro všechny — and it's okay</h3>
+    <p class="reveal">Vyhodnotit, že to celý třeba cesta není, není žádná prohra — to je validní výsledek. Příležitostí je pro chytrý a šikovný lidi dost i mimo UX. A nakonec — UX produktu stejně tvoří všichni ve firmě, ne jen UXáci.</p>
+    <div class="aside reveal">
+      <span class="emoji">🧠</span>
+      <strong>Cvičení, co radím sobě i svým mentees:</strong> Zamyslete se, co jste doteď dělali — v práci, ve škole, na projektech. Pak si promítněte, <strong>co přesně vás na tom bavilo.</strong> Že něco funguje? Že jste někomu pomohli? Proces, nebo výsledek? Nechtějte designovat „for the sake of it" — jděte po tom, co vám je přirozený. (Tohle cvičení si dávám sama dodneška, abych se zacílila i v rámci vlastní kariéry.)
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 CO SE ČEKÁ ============ -->
+<section class="sheet t4" id="s4">
+  <div class="sheet-inner">
+    <div class="numeral">04 · KVALITY</div>
+    <h2 class="reveal">Co se čeká od juniorních designerů</h2>
+    <p class="kicker reveal">— mix toho, co u nich hledám já a co hledaj kolegové, jichž si vážim</p>
+    <h3 class="reveal">1 · Schopnost dobře se ptát; empatie, zvídavost</h3>
+    <p class="reveal">UX práce je o ptaní se — uživatelů, business stakeholderů, vývojářů — a o schopnosti opravdu porozumět jejich potřebám a celý doméně. <em>(Tip: u pohovoru dost hiring manažerů posuzuje, jak a na co se ptáte vy jich 😉)</em></p>
+    <h3 class="reveal">2 · „Už něco načteno a odmakáno" a zápal se posouvat</h3>
+    <p class="reveal">Nikdo nečeká, že budete hned ve všem excelovat — do začátku jde o „od všeho aspoň něco": základy teorie, metod a nástrojů, vytrénovaný <strong>designový vidění světa</strong> (napřed přemýšlet, <span class="u">jak to bude fungovat pro lidi</span>, pak jak to vypadá) a Figma jako řemeslo — framy, autolayout, komponenty. Žádný obdélníky ve skupinách, jo? 🙂</p>
+    <div class="aside reveal">
+      <span class="emoji">⚠️</span>
+      <strong>Hrozně důležitý: business musí vydělávat peníze 💰</strong> Teorie je růžovej svět, kterej se točí kolem uživatelů — ale vaším úkolem je hledat win-wins s dobrým poměrem cena/výkon: co nejmenší úsilí, co největší přínos pro zákazníky i business. Proto se tolik rolí jmenuje <em>product</em> designer.
+    </div>
+    <h3 class="reveal">3 · Umět shipovat — a odladit, co AI vyplivne</h3>
+    <p class="reveal">Nová položka na seznamu, viz <a href="#s2">kapitola 02</a>. U pohovoru chci slyšet: co jsi postavila, kdo to používal, co ses dozvěděla a co jsi změnila. AI nástroje ovládat — ale nebejt jejich rukojmí.</p>
+    <h3 class="reveal">4 · Zkušenost řešit problémy a učit se z nich</h3>
+    <p class="reveal">Paradox „jak mám mít zkušenost, když hledám první zkušenost" řešej <strong>osobní projekty.</strong> Spolupráce se zadavatelem a omezení reálnýho světa vás naučej víc než teoretickej domácák. A nemusí to bejt jen UI — klidně pomoc neziskovce s procesama nebo návrh webu kámošovi. Platí <strong>„outcomes over outputs"</strong>: hodnota je umět formulovat cíl a vymyslet cestu k němu.</p>
+    <blockquote class="reveal">5× bych podtrhl potřebu co nejdřív si najít nějaký svůj projekt, klidně for free, a začít všechnu tu hezky znějící teorii dost pracně aplikovat do praxe.<cite>— Tobiáš Vybíral, předseda Asociace UX</cite></blockquote>
+    <div class="aside reveal">
+      <span class="emoji">🧑‍💻</span>
+      <strong>Můj unpopular opinion, dnes populárnější než kdy dřív:</strong> designer, co chce dělat UI, by měl chápat základy HTML, CSS a ideálně JS. V AI době to platí dvojnásob — víte, co vám AI vlastně generuje, a poznáte, kdy je to nesmysl. Nejlepší zdroj je <a href="https://developer.mozilla.org/en-US/docs/Learn">MDN</a>. (A jo, pořád platí: jedině React 😂)
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 PORTFOLIO ============ -->
+<section class="sheet t5" id="s5">
+  <div class="sheet-inner">
+    <div class="numeral">05 · PORTFOLIO A CV</div>
+    <h2 class="reveal">Recruiteři na vás nemají čas</h2>
+    <p class="reveal">Krutá, ale zároveň velmi ulehčující pravda: <strong>recruiteři a hiring manažeři to prolítnou a udělaj si dojem.</strong> Takže:</p>
+    <ul class="reveal">
+      <li><strong>První dojem se dělá jednou</strong> — a klidně už ve zprávě na LinkedInu nebo v mailu, ne až v portfoliu.</li>
+      <li><strong>Musí to jít proscanovat</strong> — show, don't tell. Už tím demonstrujete design skill.</li>
+      <li>Navrch jasně napište, <strong>kdo jste a čím jste zajímaví.</strong> „Nadšenej junior designer 🦄" není hodnotná informace — background z předchozí profese je vaše výhoda, ne handicap.</li>
+      <li><strong>Web, PDF nebo Google Slides — ne Figma link.</strong> Každá milisekunda načítání je kapka frustrace člověka, kterej vás posuzuje.</li>
+      <li><strong>Casky krátký,</strong> žádný romány: 1. hmatatelnej výsledek (hezkej obrázek), 2. stav před — ať je vidět zlepšení, 3. o co šlo a co byla vaše role (2 odstavce, odvyprávějte příběh), 4. dopad — ideálně čísla. <strong>A nejsilnější caska 2026 = odkaz na živou věc + co jste na ní odladili.</strong></li>
+      <li><strong>Žádný checklisty metod a graficky vypiplaný persony.</strong> Outcomes over outputs — jinak jste nerozeznatelný od <a href="https://essays.uxdesign.cc/case-study-factory/">case study factory</a>.</li>
+    </ul>
+    <p class="reveal">A mimochodem — <a href="https://medium.com/@vorkronor/why-calling-yourself-a-junior-is-hurting-your-professional-growth-78b0c4147cf0">Petr Štědrý krásně napsal, proč si neříkat junior</a>. Vaše portfolio je navíc design projekt sám o sobě: máte zadavatele, dopady svý práce i vlastní design system. Nejlepší první zkušenost there is.</p>
+    <div class="aside reveal">
+      <span class="emoji">📄</span>
+      <strong>CV tipy (od Vaška, recruitera):</strong> vždycky PDF, nikdy docx. Klíčový slova z inzerátu, <a href="https://www.indeed.com/career-advice/resumes-cover-letters/ats-resume-template">ATS-readable</a>, bez překlepů — hlavně v mailu, ať vám vůbec dojde pozvánka na pohovor. Recruiter ve výpisu skenuje jména firem a názvy pozic.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 SLOVNÍČEK ============ -->
+<section class="sheet t6" id="s6">
+  <div class="sheet-inner">
+    <div class="numeral">06 · SLOVNÍČEK</div>
+    <h2 class="reveal">Co byste měli znát</h2>
+    <p class="reveal">Nekompletní seznam pojmů „z hlavy". Klikejte — a pak se AI ptejte nejen co znamenaj, ale hlavně <strong>kdy je použít.</strong></p>
+    <div class="chips reveal" id="chips"></div>
+    <div class="defbox" id="defbox" aria-live="polite">
+      <div class="term">👆 vyber si pojem</div>
+      <p>Každej z nich je vstupní bod do kusu oboru.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 ZDROJE ============ -->
+<section class="sheet t6 res" id="s7">
+  <div class="sheet-inner">
+    <div class="numeral">07 · ZDROJE</div>
+    <h2 class="reveal">Co za to fakt stojí</h2>
+    <p class="kicker reveal">radikálně zkrácenej, kurátorovanej výběr — míň je víc</p>
+    <h3 class="reveal">Základ zadarmo</h3>
+    <ul class="reveal">
+      <li><a href="https://www.nngroup.com/">NN/g</a> (web + <a href="https://www.youtube.com/@NNgroup">YouTube</a>) — <em>ta</em> autorita oboru; začněte u <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">10 Usability Heuristics</a></li>
+      <li><a href="https://www.youtube.com/watch?v=_PFqcMh7Uqk&list=PLTZYG7bZ1u6oHnGp4Ib3n0y-CmFQdTW6r&index=5">Google UX kurz na YouTube</a> — zadarmo; placenej certifikát nepotřebujete</li>
+      <li><a href="https://lawsofux.com/">Laws of UX</a> + <a href="https://growth.design/">Growth.design</a> — psychologie v UX, podaný zábavně</li>
+      <li><a href="https://kisk.phil.muni.cz/100metod">100metod.cz</a> — nejlepší českej UX zdroj ever</li>
+      <li>Moje punkový webináře pro Česko.digital — <a href="https://www.youtube.com/watch?v=f8amf7sMxv8">intro do UX</a>, <a href="https://youtu.be/1HjmWlwPzJA">do UI</a> a <a href="https://www.youtube.com/watch?v=D7A4gOwwgoQ">do Figmy</a></li>
+    </ul>
+    <h3 class="reveal">Knížky — timeless</h3>
+    <ul class="reveal">
+      <li><strong>The User Experience Team of One</strong> (Buley) — s čím vším budete bojovat v reálný firmě</li>
+      <li><strong>Think First</strong> (Natoli) — nedoceněná, rychlá; ta důležitá business protiváha</li>
+      <li><strong>Just Enough Research</strong> (Hall) — výzkum jde dělat dobře i jednoduše</li>
+      <li><strong>The Design of Everyday Things</strong> (Norman) — „beletrie" na před spaním; otevře vám oči a možná vás začnou štvát věci, co vás předtím neštvaly</li>
+      <li><strong>Don't Make Me Think</strong> (Krug) — starší, ale jak nedělat věci debilní platí dodnes</li>
+    </ul>
+    <h3 class="reveal">Placený, čemu bych věřila</h3>
+    <ul class="reveal">
+      <li><a href="https://www.simonjun.cz/kurzy/figma">Šimonův Figma MasterClass</a> (kód <code>klara10</code>) — Figmu i zkušený designeři používaj, inu, nedobře</li>
+      <li><a href="https://skillmea.cz/online-kurzy/ux-design-polopate">Kurz Toma Pauluse</a> — za hubičku, základama provede pod 3 h</li>
+      <li><a href="https://www.interaction-design.org/courses">IxDF</a> — na akademičtější/výzkumnější/strategičtější témata, dobrej poměr cena/výkon</li>
+    </ul>
+    <h3 class="reveal">Česká komunita</h3>
+    <ul class="reveal">
+      <li><a href="https://www.asociaceux.cz/clenstvi-v-aux">Slack UX CZ</a> · <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> · <a href="https://realuxcamp.com/">RealUXCamp</a> · newsletter <a href="https://www.reknisioweb.cz/">Řekni si o web</a></li>
+    </ul>
+    <details class="reveal">
+      <summary>chci toho víc</summary>
+      <ul style="margin-top:10px">
+        <li><a href="https://uxcel.com/">UXcel</a> — takový „UX Duolingo" · <a href="https://www.figma.com/resource-library/design-basics/">Design basics od Figmy</a> — čtecí intro</li>
+        <li>UI řemeslo: <a href="https://m3.material.io/get-started">Material Design</a> a <a href="https://developer.apple.com/design/human-interface-guidelines">Apple HIG</a> designeři zkrátka znát musej · <a href="https://www.checklist.design/">Checklist Design</a> · <a href="https://ui-patterns.com/">UI-Patterns</a> · <a href="https://carbondesignsystem.com/">Carbon</a> · <a href="https://www.designsystems.com/">DesignSystems.com</a></li>
+        <li>Inspirace: <a href="https://mobbin.com/">Mobbin</a> (reálný appky) · <a href="https://www.awwwards.com/">awwwards</a> (webdesignerský porníčko)</li>
+        <li>Další knížky: <em>Sprint</em> (na facilitaci a historky, ne jako how-to) · <em>About Face</em> (Cooper) · <em>Designing for the Digital Age</em> (Goodwin — „učebnice", kterou nikdo nedočet)</li>
+        <li>Specializace: <a href="https://dune-harbor-fc1.notion.site/uxwritinghub">UX writing rozcestník od Lény</a> · <a href="https://www.proofreason.com/blog/kde-se-na-ucit-cx-36-5-uzitecnych-zdroju-o-zakaznicke-zkusenosti-z-cr-i-ze-zahranici">CX rozcestník od Terezy</a> · <a href="https://matejkaninsky.com/blog/ux-research-design-meta-repository/">Matějův meta-repo</a> · <a href="https://www.uxlibrary.org/">UX Library</a></li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 08 OUTRO ============ -->
+<section class="sheet t-ink outro" id="s8">
+  <div class="sheet-inner">
+    <div class="numeral">08 · OUTRO</div>
+    <h2 class="reveal">🍾 A to je konec!</h2>
+    <p class="reveal">Díky, že jste dočetli až sem — tentokrát to snad bylo kratší 😀 Pokud vám to k něčemu bylo, budu ráda za zmínku, sdílení, nebo mi na Mondayi kupte pivko. A pokud máte dotazy, feedback, nebo zájem o konzultaci — napište mi.</p>
+    <div class="contacts reveal">
+      <a href="mailto:klara.scholleova@gmail.com">mail</a>
+      <a href="https://www.linkedin.com/in/klara-scholleova/">linkedin</a>
+      <a href="https://www.instagram.com/klara_scho/">instagram</a>
+    </div>
+    <p class="reveal"><strong>Držim palce — a doufám, že se vidíme v hospodě na UX Mondayi 🍻</strong></p>
+    <div class="reveal">
+      <svg class="knot-final" width="150" height="90" viewBox="0 0 150 90" aria-hidden="true">
+        <path d="M0,45 C30,45 40,20 65,20 C90,20 95,55 75,60 C55,65 55,30 80,32 C105,34 105,58 130,58 L150,58"/>
+        <circle cx="146" cy="58" r="3.5" style="fill:var(--red);stroke:none"/>
+      </svg>
+    </div>
+    <p class="sig reveal">Jak do UX · první verze 2024, tahle edice 2026 · díky český UX komunitě, Adri (že mě dokopala to vydat) a všem, co mi dali feedback: Tobiáš, Honza, Petr, Filip, Gabka, Dugi, Vašek a další 🙏</p>
+  </div>
+</section>
+
+<script>
+/* ============ reveal on scroll ============ */
+const io = new IntersectionObserver(entries=>{
+  for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }
+},{threshold:.18});
+document.querySelectorAll('.reveal, .claim, .thread-sep').forEach(el=>io.observe(el));
+
+/* ============ nit: progress + uzly + scrub ============ */
+const rail = document.querySelector('.rail');
+const fill = rail.querySelector('.fill');
+const sections = [...document.querySelectorAll('.sheet[id]')];
+const LABELS = {
+  top:'Obálka', s1:'01 · Úvod', s2:'02 · Ukaž, že umíš shipovat',
+  s3:'03 · Jak bych na to šla já', s4:'04 · Co se čeká od juniorů',
+  s5:'05 · Portfolio a CV', s6:'06 · Slovníček', s7:'07 · Zdroje', s8:'08 · Outro'
+};
+const hit = document.createElement('div'); hit.className='hit'; rail.appendChild(hit);
+const knots = sections.map(sec=>{
+  const k = document.createElement('button');
+  k.className='knot';
+  k.dataset.label = LABELS[sec.id] || sec.id;
+  k.setAttribute('aria-label','Přejít na ' + k.dataset.label);
+  k.addEventListener('click',()=>sec.scrollIntoView({behavior:'smooth'}));
+  rail.appendChild(k);
+  return k;
+});
+
+/* scrub po niti (drag/touch) */
+let scrub = null;
+function scrubTo(cy){
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const p = Math.min(1, Math.max(0, cy/innerHeight));
+  scrollTo({top:p*max, behavior:'instant'});
+  let best=0, bd=1e9;
+  knots.forEach((k,i)=>{const d=Math.abs(k.offsetTop-cy); if(d<bd){bd=d;best=i}});
+  knots.forEach((k,i)=>k.classList.toggle('show', i===best));
+}
+hit.addEventListener('pointerdown',e=>{
+  scrub={y0:e.clientY}; hit.setPointerCapture(e.pointerId);
+  rail.classList.add('scrubbing'); scrubTo(e.clientY); e.preventDefault();
+});
+hit.addEventListener('pointermove',e=>{ if(scrub) scrubTo(e.clientY); });
+function endScrub(){ rail.classList.remove('scrubbing'); knots.forEach(k=>k.classList.remove('show')); scrub=null; }
+hit.addEventListener('pointerup',endScrub);
+hit.addEventListener('pointercancel',endScrub);
+function layoutKnots(){
+  const max = document.documentElement.scrollHeight - innerHeight;
+  sections.forEach((sec,i)=>{ knots[i].style.top = (Math.min(sec.offsetTop,max)/max*100)+'%'; });
+}
+function onScroll(){
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const p = Math.min(1, scrollY/max);
+  fill.style.height = (p*100)+'%';
+  sections.forEach((sec,i)=>knots[i].classList.toggle('passed', scrollY + 10 >= sec.offsetTop));
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',()=>{layoutKnots();onScroll();});
+layoutKnots(); onScroll();
+
+/* ============ slovníček ============ */
+const TERMS = [
+  ["UX vs UI","UX je celá zkušenost člověka s produktem; UI je to, na co sahá. UI je podmnožina — a „malování“ je v UX špička ledovce, prakticky za odměnu."],
+  ["product / service design","Product design = UX + produktovej přesah (business, priority, metriky). Service design řeší celý služby napříč kanálama, i mimo obrazovky."],
+  ["usability","Použitelnost: jak snadno a spolehlivě lidi s věcí udělaj, co potřebujou. Podmnožina UX — věc může bejt použitelná, a stejně nikomu nechybět."],
+  ["double diamond","Model procesu: rozšířit (poznat problém) → zúžit (definovat) → rozšířit (vymejšlet řešení) → zúžit (dodat). Diverguj, pak konverguj — dvakrát."],
+  ["design thinking","Přístup k řešení problémů, kterej začíná u lidí: empatie → definice → ideace → prototyp → test. Rámec, ne náboženství."],
+  ["kvali vs kvanti výzkum","Kvalitativní říká proč (rozhovory, testování s 5 lidma), kvantitativní kolik (analytika, A/B). Potřebujete chápat obojí a vědět, kdy co."],
+  ["persona","Zhuštěnej model typickýho uživatele z výzkumu. Nástroj na komunikaci a rozhodování — ne graficky vypiplaná nástěnka do portfolia."],
+  ["journey mapping","Zmapování cesty člověka službou v čase — kroky, emoce, bolesti. Skvělý na hledání míst, kde to skřípe."],
+  ["information architecture","Jak je obsah a funkce strukturovaná a pojmenovaná, aby ji lidi našli a pochopili. Neviditelná, dokud není blbě."],
+  ["user flow","Diagram cesty konkrétním úkolem, obrazovka po obrazovce / rozhodnutí po rozhodnutí. Neplést s user journey (ta je širší a v čase)."],
+  ["wireframe → prototype","Wireframe je hrubej návrh bez vizuálu, mockup je hezkej ale statickej, prototyp je klikatelnej. Fidelita má růst s jistotou, ne s deadlinem."],
+  ["heuristic evaluation","Expertní projití rozhraní proti checklist principům (typicky 10 Nielsenových heuristik). Rychlý a levný, ale nenahradí testování s lidma."],
+  ["usability testing","Dáte věc člověku, zadáte úkol a mlčky koukáte, kde se zasekne. Nejdůležitější metoda ever — a jde dělat i za odpoledne."],
+  ["A/B testing","Dvě verze proti sobě naživo, rozhodnou data. Kvantitativní validace — potřebuje provoz a jasnou metriku."],
+  ["design systems","Sdílenej systém komponent, pravidel a tokenů, ze kterýho se skládaj produkty. Možná specializace — a dobrej způsob, jak pochopit UI do hloubky."],
+  ["design tokens","Pojmenovaný designový hodnoty (barvy, spacing, typo) sdílený mezi designem a kódem. Základ škálovatelnýho design systemu."],
+  ["Figma řemeslo","Autolayout, komponenty, variables, constraints. Nemalujte obdélníky ve skupinách — a nezaměňujte #supafast tiktokový triky za umění návrhu UI."]
+];
+const chipsEl = document.getElementById('chips');
+const defbox = document.getElementById('defbox');
+TERMS.forEach(([t,d],i)=>{
+  const b=document.createElement('button');
+  b.className='chip'; b.textContent=t;
+  b.addEventListener('click',()=>{
+    chipsEl.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    b.classList.add('active');
+    defbox.innerHTML = '<div class="term">'+t+'</div><p>'+d+'</p>';
+  });
+  chipsEl.appendChild(b);
+});
+
+/* easter egg */
+console.log('%ckoukáš pod kapotu? správně. ship it. 🍻','color:#d1240f;font-size:14px;font-family:monospace');
+</script>
+</body>
+</html>
