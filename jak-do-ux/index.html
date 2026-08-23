@@ -8,27 +8,30 @@
 <meta property="og:title" content="Jak do UX — edice 2026">
 <meta property="og:description" content="Vygenerovat věc je snadný. Odladit experience je ta práce. Upřímnej guide, jak se dostat do UX.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://ksch.cz/jak-do-ux/">
-<link rel="canonical" href="https://ksch.cz/jak-do-ux/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23d1240f' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='%23ffe600' stroke='%23131313' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ============================================================
-   JAK DO UX · 2026 — „šitá vazba"
-   listy papíru (vrstvy) sešitý jednou červenou nití
+   JAK DO UX · 2026
+   listy papíru + jedna červená nit — flat, clean, editorial
    ============================================================ */
 :root{
-  --ink:#17150f;
-  --paper:#fcfbf9;
-  --red:#d1240f;
-  --red-soft:rgba(209,36,15,.14);
-  --mono:'IBM Plex Mono',ui-monospace,monospace;
-  --sans:'Archivo',-apple-system,sans-serif;
-  --pad:clamp(22px,5vw,72px);
-  --maxw:820px;
+  --ink:#131313;
+  --ink-60:rgba(19,19,19,.6);
+  --ink-45:rgba(19,19,19,.45);
+  --hair:rgba(19,19,19,.14);
+  --paper:#fbfaf8;
+  --red:#131313; /* linky a nit = inkoust (paleta Fix) */
+  --red-soft:rgba(19,19,19,.14);
+  --hl:#ffe600; /* žlutej zvýrazňovač — jedinej barevnej akcent */
+  --mono:'Spline Sans Mono',ui-monospace,monospace;
+  --sans:'Hanken Grotesk',-apple-system,sans-serif;
+  --disp:'Familjen Grotesk',var(--sans);
+  --pad:clamp(22px,5vw,76px);
+  --maxw:760px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -36,293 +39,291 @@ body{
   font-family:var(--sans);
   background:var(--ink);
   color:var(--ink);
-  line-height:1.6;
-  font-size:clamp(15.5px,1.05vw + 10px,17.5px);
+  line-height:1.65;
+  font-size:clamp(15.5px,1vw + 10px,17px);
   -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
-::selection{background:var(--red);color:#fff}
+::selection{background:var(--hl);color:var(--ink)}
 
-a{color:inherit;text-decoration-color:var(--red);text-decoration-thickness:1.5px;text-underline-offset:3px}
-a:hover{color:var(--red)}
-strong{font-weight:700}
+a{color:inherit;text-decoration:underline;text-decoration-color:rgba(19,19,19,.3);text-decoration-thickness:1.5px;text-underline-offset:3px;transition:background-color .15s ease,text-decoration-color .15s ease}
+a:hover{background-color:var(--hl);text-decoration-color:var(--ink);color:var(--ink)}
+strong{font-weight:600}
 em{font-style:italic}
 
-/* ---------- červená nit: levá kolejnice ---------- */
-.rail{
-  position:fixed;left:clamp(8px,2vw,26px);top:0;bottom:0;width:2px;
-  background:var(--red-soft);z-index:90;
-}
-.rail .fill{
-  position:absolute;top:0;left:0;width:100%;height:0%;
-  background:var(--red);transition:height .1s linear;
-}
-.rail .knot{
-  position:absolute;left:50%;transform:translate(-50%,-50%);
-  width:11px;height:11px;border-radius:50%;
-  background:var(--paper);border:2px solid var(--red);
-  cursor:pointer;transition:transform .2s ease, background .2s ease;
-}
-.rail .knot:hover{transform:translate(-50%,-50%) scale(1.5);background:var(--red)}
-.rail .knot.passed{background:var(--red)}
+/* ---------- nit: levá kolejnice ---------- */
+.rail{position:fixed;left:clamp(8px,2vw,28px);top:0;bottom:0;width:2px;background:var(--red-soft);z-index:90}
+.rail .fill{position:absolute;top:0;left:0;width:100%;height:var(--p,0%);background:var(--red);pointer-events:none}
 .rail .hit{position:absolute;top:0;bottom:0;left:-12px;right:-16px;touch-action:none;cursor:grab}
 .rail.scrubbing .hit{cursor:grabbing}
+.rail .knot{
+  position:absolute;left:50%;transform:translate(-50%,-50%);
+  width:9px;height:9px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--red);
+  cursor:pointer;transition:transform .18s ease,background .18s ease;padding:0;
+}
+.rail .knot:hover{transform:translate(-50%,-50%) scale(1.55);background:var(--hl)}
+.rail .knot.passed{background:var(--red)}
 .rail .knot::after{
-  content:attr(data-label);position:absolute;left:18px;top:50%;
+  content:attr(data-label);position:absolute;left:16px;top:50%;
   transform:translateY(-50%) translateX(-6px);
-  background:var(--ink);color:#fcfbf9;font-family:var(--mono);font-size:11px;
-  padding:5px 10px;border-radius:4px;white-space:nowrap;
-  opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;
+  background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10.5px;
+  padding:5px 10px;border-radius:3px;white-space:nowrap;letter-spacing:.02em;
+  opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;
 }
 .rail .knot:hover::after,.rail .knot.show::after{opacity:1;transform:translateY(-50%)}
 
 /* ---------- listy ---------- */
 .sheet{
   position:relative;
-  border-radius:26px 26px 0 0;
-  margin-top:-28px;
-  padding:calc(var(--pad) + 28px) var(--pad) calc(var(--pad) + 10px);
-  box-shadow:0 -2px 6px rgba(23,21,15,.06), 0 -16px 36px rgba(23,21,15,.13);
+  border-radius:18px 18px 0 0;
+  margin-top:-20px;
+  padding:calc(var(--pad) + 20px) var(--pad) calc(var(--pad) + 8px);
+  box-shadow:0 -1px 0 rgba(19,19,19,.07), 0 -14px 28px rgba(19,19,19,.06);
 }
-.sheet:first-of-type{margin-top:0;border-radius:0;padding-top:var(--pad)}
+.sheet:first-of-type{margin-top:0;border-radius:0;padding-top:var(--pad);box-shadow:none}
 .sheet-inner{max-width:var(--maxw);margin:0 auto;position:relative}
 
-/* šev — prošití nití na hraně každýho listu */
-.sheet:not(:first-of-type)::before{
-  content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);
-  width:min(200px,44%);height:2px;
-  background:repeating-linear-gradient(90deg,var(--red) 0 11px,transparent 11px 20px);
-  opacity:.85;
-}
-
-/* tonální cesta: papír → inkoust (jemná) */
-.t0{background:#fcfbf9}
-.t1{background:#f9f7f3}
-.t2{background:#f6f3ed}
-.t3{background:#f2efe7}
-.t4{background:#eeeae1}
-.t5{background:#eae5da}
-.t6{background:#e5e0d3}
-.t-ink{background:#14120d;color:#f0ede6}
-.t-ink a:hover{color:#ff6a55}
-.t-ink ::selection{background:#fff;color:var(--ink)}
+/* listy: jednotnej papír (ztmavování zrušený), kontrast až černý outro */
+.t0,.t1,.t2,.t3,.t4,.t5,.t6{background:var(--paper)}
+.t-ink{background:#121110;color:#f0eee8}
+.t-ink a{text-decoration-color:rgba(240,238,232,.35)}
+.t-ink .numeral b{color:var(--hl)}
+.t-ink .knot-final path,.t-ink .knot-final circle{stroke:var(--hl)}
+.t-ink .knot-final circle{fill:var(--hl)!important}
 
 /* ---------- typografie ---------- */
 .numeral{
-  font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--red);
-  display:flex;align-items:center;gap:10px;margin-bottom:26px;font-weight:500;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--ink-45);margin-bottom:34px;font-weight:400;text-transform:uppercase;
 }
-.numeral::after{content:"";flex:1;height:1px;background:currentColor;opacity:.3}
+.numeral b{color:var(--red);font-weight:500;margin-right:6px}
+.t-ink .numeral{color:rgba(240,238,232,.4)}
+h1,h2,h3,.claim,.chmenu a,blockquote{font-family:var(--disp)}
 h2{
-  font-weight:850;font-stretch:100%;
-  font-size:clamp(1.9rem,5.5vw,3.2rem);
-  line-height:1.02;letter-spacing:-.025em;margin-bottom:26px;
+  font-weight:600;
+  font-size:clamp(1.75rem,4.6vw,2.7rem);
+  line-height:1.05;letter-spacing:-.03em;margin-bottom:28px;
 }
-h3{
-  font-weight:750;font-size:clamp(1.12rem,2.4vw,1.35rem);
-  letter-spacing:-.01em;margin:34px 0 10px;
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+h3{font-weight:600;font-size:clamp(1.05rem,2.2vw,1.2rem);letter-spacing:-.015em;margin:40px 0 12px}
+.hn{
+  font-family:var(--mono);font-weight:400;font-size:.6em;color:var(--red);
+  vertical-align:.55em;margin-right:.7em;letter-spacing:.06em;
 }
-p{margin-bottom:14px;max-width:64ch}
-ul,ol{margin:0 0 16px 22px;max-width:62ch}
-li{margin-bottom:9px}
-li::marker{color:var(--red)}
+p{margin-bottom:14px;max-width:62ch}
+ul,ol{margin:0 0 16px 20px;max-width:60ch}
+li{margin-bottom:10px}
+li::marker{color:var(--red);font-weight:500}
+.kicker{font-family:var(--mono);font-size:12px;color:var(--ink-45);margin:-18px 0 26px;letter-spacing:.02em}
+.t-ink .kicker{color:rgba(240,238,232,.45)}
 
-.kicker{font-family:var(--mono);font-size:13px;color:rgba(23,21,15,.55);margin:-16px 0 22px}
-.t-ink .kicker{color:rgba(240,237,230,.55)}
+/* zesnulý výmluvy — čitelný, jen decentně pohřbený */
+.rip{color:var(--ink-60);font-style:italic}
+.rip sup{font-family:var(--mono);font-style:normal;font-size:.6em;color:var(--red);margin-left:4px;letter-spacing:.05em;white-space:nowrap}
+/* žlutej marker — přejede přes text při revealu */
+.u{
+  white-space:nowrap;padding:0 .1em;
+  background-image:linear-gradient(var(--hl),var(--hl));
+  background-repeat:no-repeat;background-position:0 58%;background-size:100% 48%;
+  transition:background-size .8s cubic-bezier(.7,0,.2,1) .35s;
+}
+.js .u{background-size:0% 48%}
+.js .in .u{background-size:100% 48%}
 
-/* diff — škrtnutý 2024 pravdy */
-.strike{
-  text-decoration:line-through;text-decoration-color:var(--red);
-  text-decoration-thickness:2.5px;color:rgba(23,21,15,.45);
+/* blok (dřív aside) — flat, editorial */
+.block{border-left:2px solid var(--red);padding:4px 0 4px 22px;margin:30px 0;max-width:60ch}
+.block .lbl{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  color:var(--ink);background:var(--hl);padding:3px 9px;margin-bottom:10px;
+  text-transform:uppercase;font-weight:500;
 }
-.u{position:relative;white-space:nowrap}
-.u::after{
-  content:"";position:absolute;left:-1px;right:-1px;bottom:-3px;height:2.5px;background:var(--red);
-  transform-origin:left;transition:transform .8s cubic-bezier(.7,0,.2,1) .3s;
-}
-.js .u::after{transform:scaleX(0)}
-.js .in .u::after{transform:scaleX(1)}
-
-/* aside — „tácek": kartička přišitá nití */
-.aside{
-  position:relative;background:rgba(255,255,255,.72);
-  border:1px solid rgba(23,21,15,.12);border-radius:10px;
-  padding:20px 22px;margin:28px 0;max-width:64ch;
-  box-shadow:0 2px 14px rgba(0,0,0,.05);
-}
-.aside::before{
-  content:"";position:absolute;top:-1px;left:22px;width:74px;height:2px;
-  background:repeating-linear-gradient(90deg,var(--red) 0 9px,transparent 9px 16px);
-}
-.aside .emoji{float:left;font-size:22px;margin:2px 12px 4px 0}
-.t-ink .aside{background:rgba(255,255,255,.06);border-color:rgba(240,237,230,.15)}
+.block p{margin-bottom:8px}
+.block p:last-child{margin-bottom:0}
 
 blockquote{
-  border-left:2.5px solid var(--red);padding:4px 0 4px 20px;margin:26px 0;
-  font-style:italic;color:rgba(23,21,15,.75);max-width:60ch;
+  font-style:italic;font-size:1.2rem;line-height:1.5;font-weight:500;
+  padding:0;margin:34px 0;max-width:54ch;color:var(--ink);letter-spacing:-.015em;
 }
-blockquote cite{display:block;font-style:normal;font-family:var(--mono);font-size:12.5px;margin-top:8px;color:rgba(23,21,15,.5)}
+blockquote cite{
+  display:block;font-family:var(--mono);font-style:normal;font-size:11px;
+  margin-top:12px;color:var(--ink-45);letter-spacing:.08em;text-transform:uppercase;
+}
 
-/* reveal — skrývá se jen když běží JS (progressive enhancement) */
-.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(14px);transition:opacity .65s ease,transform .65s ease}
 .js .reveal.in{opacity:1;transform:none}
 
-/* ---------- hero / obálka ---------- */
+/* ---------- hero ---------- */
 .cover{min-height:100svh;display:flex;flex-direction:column}
 .cover .bar{
   display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
-  color:rgba(23,21,15,.55);padding-bottom:24px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  color:var(--ink-45);padding-bottom:24px;text-transform:uppercase;
 }
 .cover h1{
-  font-weight:880;font-size:clamp(3.4rem,14vw,9.5rem);
-  line-height:.92;letter-spacing:-.04em;margin:auto 0 0;
+  font-weight:600;font-size:clamp(3.4rem,15vw,10rem);
+  line-height:.9;letter-spacing:-.05em;margin:auto 0 0;
 }
-.cover h1 .ux{color:var(--red)}
-.cover .thread-hero{display:block;width:100%;max-width:640px;margin:6px 0 2px}
+.cover h1 .ux{background:var(--hl);padding:0 .1em;margin-left:-.02em}
+.cover .thread-hero{display:block;width:100%;max-width:620px;margin:10px 0 4px}
 .cover .thread-hero path{
   stroke:var(--red);fill:none;stroke-width:2;
-  stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 3.2s cubic-bezier(.6,0,.3,1) forwards .5s;
+  stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 3s cubic-bezier(.6,0,.3,1) forwards .5s;
 }
 @keyframes draw{to{stroke-dashoffset:0}}
-.cover .sub{font-size:clamp(1rem,2.2vw,1.25rem);max-width:44ch;color:rgba(23,21,15,.8);margin-bottom:30px}
-.cover .toc{
-  margin-top:auto;padding-top:26px;border-top:1px solid rgba(23,21,15,.14);
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px 26px;
-  font-family:var(--mono);font-size:12.5px;
+.cover .sub{
+  font-size:clamp(1.05rem,2.3vw,1.35rem);max-width:40ch;margin-bottom:34px;line-height:1.5;
+  letter-spacing:-.01em;
 }
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:2px}
+.sheet[id]{scroll-margin-top:8px}
+.cover .toc{margin-top:auto;border-top:1px solid var(--hair);display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,6vw,72px)}
 .cover .toc a{
-  text-decoration:none;color:rgba(23,21,15,.7);display:flex;gap:9px;align-items:baseline;padding:4px 0;
+  text-decoration:none;display:flex;gap:14px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--hair);
+  font-size:14.5px;letter-spacing:-.01em;transition:color .15s ease;
 }
-.cover .toc a b{color:var(--red);font-weight:500}
-.cover .toc a:hover{color:var(--ink);transform:translateX(3px)}
-.cover .toc a{transition:transform .2s ease,color .2s ease}
-.cover .hint{font-family:var(--mono);font-size:11px;color:rgba(23,21,15,.45);margin-top:22px;animation:bob 2.2s ease-in-out infinite}
+.cover .toc a b{font-family:var(--mono);font-weight:400;font-size:11px;color:var(--red)}
+.cover .toc a:hover{color:var(--red)}
+.cover .hint{font-family:var(--mono);font-size:11px;color:var(--ink-45);margin-top:20px;animation:bob 2.4s ease-in-out infinite;width:max-content}
 @keyframes bob{50%{transform:translateY(4px)}}
 
-/* ---------- draft disclaimer ---------- */
-.draft-note{
-  font-family:var(--mono);font-size:12.5px;line-height:1.55;
-  color:rgba(23,21,15,.75);
-  border:1.5px dashed var(--red);border-radius:10px;
-  padding:12px 16px;margin:22px 0 26px;max-width:56ch;
-  background:var(--red-soft);
-}
-.draft-note b{color:var(--red);font-weight:500;letter-spacing:.08em}
-.draft-note a{color:inherit}
-
-/* ---------- velký claim s nití ---------- */
+/* ---------- claim ---------- */
 .claim{
-  font-weight:800;font-size:clamp(1.45rem,4vw,2.3rem);line-height:1.15;
-  letter-spacing:-.02em;margin:30px 0 24px;max-width:26ch;
+  font-weight:600;font-size:clamp(1.5rem,4.2vw,2.35rem);line-height:1.12;
+  letter-spacing:-.03em;margin:34px 0 26px;max-width:24ch;
 }
-
-/* thread mezi odstavci (SVG oddělovač) */
-.thread-sep{display:block;width:min(420px,80%);margin:34px 0 26px}
-.thread-sep path{
-  stroke:var(--red);fill:none;stroke-width:1.8;
-  stroke-dasharray:600;transition:stroke-dashoffset 1.6s cubic-bezier(.6,0,.3,1) .2s;
-}
-.js .thread-sep path{stroke-dashoffset:600}
-.js .in .thread-sep path,.js .thread-sep.in path{stroke-dashoffset:0}
-
-/* kroužek kolem slova */
+/* dvojitý podtržení zvýrazňovačem — jeden tah, kreslí se při scrollu */
 .circle-w{position:relative;white-space:nowrap}
-.circle-w svg{position:absolute;inset:-38% -14%;width:128%;height:176%;overflow:visible;pointer-events:none}
-.circle-w svg path{
-  stroke:var(--red);fill:none;stroke-width:2;
-  stroke-dasharray:400;transition:stroke-dashoffset 1.2s ease .5s;
+.circle-w svg{
+  position:absolute;left:-2%;bottom:-.42em;width:104%;height:.62em;
+  overflow:visible;pointer-events:none;mix-blend-mode:multiply;
 }
-.js .circle-w svg path{stroke-dashoffset:400}
+.circle-w svg path{
+  stroke:var(--hl);fill:none;stroke-width:7.5;stroke-linecap:round;
+  stroke-dasharray:480;transition:stroke-dashoffset 1.1s cubic-bezier(.6,0,.3,1) .5s;
+}
+.js .circle-w svg path{stroke-dashoffset:480}
 .js .in .circle-w svg path{stroke-dashoffset:0}
 
-/* ---------- slovníček chips ---------- */
-.chips{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 6px;max-width:none}
+/* ---------- slovníček ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0;max-width:none}
 .chip{
-  font-family:var(--sans);font-size:14px;font-weight:550;
-  border:1.5px solid var(--ink);background:transparent;color:inherit;
-  border-radius:999px;padding:6px 15px;cursor:pointer;
-  transition:all .18s ease;
+  font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:-.01em;
+  border:1px solid var(--hair);background:transparent;color:inherit;
+  border-radius:999px;padding:7px 15px;cursor:pointer;transition:all .15s ease;
 }
-.chip:hover{border-color:var(--red);color:var(--red);transform:rotate(-1deg)}
-.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.defbox{
-  min-height:86px;border-left:2.5px solid var(--red);
-  padding:14px 18px;margin-top:18px;max-width:64ch;
-  background:rgba(255,255,255,.5);border-radius:0 10px 10px 0;
-}
-.defbox .term{font-weight:750;margin-bottom:4px}
-.defbox p{margin:0;font-size:15px}
+.chip:hover{border-color:var(--ink)}
+.chip.active{border-color:var(--ink);background:var(--hl);color:var(--ink)}
+.defbox{min-height:80px;border-left:2px solid var(--red);padding:4px 0 4px 22px;margin-top:26px;max-width:60ch}
+.defbox .term{font-weight:600;margin-bottom:4px}
+.defbox p{margin:0;font-size:15px;color:var(--ink-60)}
 
 /* ---------- zdroje ---------- */
-.res h3{display:flex;align-items:baseline;gap:12px}
-.res h3::after{content:"";flex:1;height:1px;background:rgba(23,21,15,.15)}
-details{margin:26px 0;max-width:64ch}
+.res h3{display:flex;align-items:baseline;gap:14px}
+.res h3::after{content:"";flex:1;height:1px;background:var(--hair)}
+details{margin:30px 0 0;max-width:62ch}
 details summary{
-  cursor:pointer;font-family:var(--mono);font-size:13.5px;color:var(--red);
+  cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--red);
   list-style:none;display:flex;align-items:center;gap:10px;padding:10px 0;
+  letter-spacing:.08em;text-transform:uppercase;
 }
-details summary::before{content:"+";font-size:18px;transition:transform .25s ease}
+details summary::before{content:"+";font-size:16px;transition:transform .2s ease}
 details[open] summary::before{transform:rotate(45deg)}
 details summary::-webkit-details-marker{display:none}
+code{font-family:var(--mono);font-size:.85em;background:rgba(19,19,19,.06);padding:1px 6px;border-radius:4px}
 
 /* ---------- outro ---------- */
-.outro{padding-bottom:calc(var(--pad) * 1.4)}
-.outro h2{font-size:clamp(2.2rem,7vw,4.2rem)}
-.knot-final{display:block;margin:36px 0 10px}
+.outro{padding-bottom:calc(var(--pad) * 1.3)}
+.outro h2{font-size:clamp(2.1rem,6.5vw,3.8rem)}
+.knot-final{display:block;margin:40px 0 8px}
 .knot-final path,.knot-final circle{
   stroke:var(--red);fill:none;stroke-width:2;
   stroke-dasharray:900;transition:stroke-dashoffset 2.4s ease .3s;
 }
 .js .knot-final path,.js .knot-final circle{stroke-dashoffset:900}
 .js .in .knot-final path,.js .in .knot-final circle{stroke-dashoffset:0}
-.contacts{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:14px;margin:26px 0 40px}
-.sig{font-family:var(--mono);font-size:12px;color:rgba(240,237,230,.45);border-top:1px solid rgba(240,237,230,.14);padding-top:22px;max-width:none}
+.contacts{display:flex;gap:26px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;margin:28px 0 44px;letter-spacing:.02em}
+.sig{
+  font-family:var(--mono);font-size:11.5px;color:rgba(240,238,232,.4);
+  border-top:1px solid rgba(240,238,232,.14);padding-top:24px;max-width:none;line-height:1.7;
+}
 
-/* ---------- scroll-driven bonusy ---------- */
+/* ---------- mobilní obsah: pill + menu ---------- */
+.pill{
+  display:none;position:fixed;right:16px;bottom:16px;z-index:110;
+  font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+  background:var(--ink);color:var(--paper);border:none;border-radius:999px;
+  padding:11px 16px;cursor:pointer;box-shadow:0 6px 20px rgba(19,19,19,.25);
+  max-width:70vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pill .dot{color:var(--hl);margin-right:8px}
+.chmenu{position:fixed;inset:0;background:var(--paper);z-index:120;padding:20px 24px;display:flex;flex-direction:column;overflow:auto}
+.chmenu[hidden]{display:none}
+.chmenu .close{
+  align-self:flex-end;font-size:26px;line-height:1;background:none;border:none;
+  padding:10px;cursor:pointer;color:var(--ink);font-family:var(--sans);
+}
+.chmenu nav{display:flex;flex-direction:column;margin-top:6px}
+.chmenu a{
+  text-decoration:none;font-size:20px;font-weight:600;letter-spacing:-.02em;
+  padding:15px 0;border-bottom:1px solid var(--hair);
+  display:flex;gap:16px;align-items:baseline;
+}
+.chmenu a b{font-family:var(--mono);font-size:11.5px;color:var(--red);font-weight:400}
+.chmenu a.cur{color:var(--red)}
+@media (max-width:640px){ .pill{display:block} }
+
+/* ---------- motion ---------- */
 @supports (animation-timeline: view()){
   .sheet:not(.t-ink){
     animation:settle linear both;
     animation-timeline:view();
     animation-range:exit 0% exit 100%;
-    transform-origin:50% 100%; /* spodní hrana drží — žádný mikroškvíry */
+    transform-origin:50% 100%;
   }
-  @keyframes settle{to{transform:scale(.988);filter:brightness(.97)}}
+  @keyframes settle{to{transform:scale(.992)}}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .reveal{opacity:1;transform:none}
-  .cover .thread-hero path,.thread-sep path,.circle-w svg path,.knot-final path,.knot-final circle{stroke-dashoffset:0}
-  .u::after{transform:scaleX(1)}
+  .js .reveal{opacity:1;transform:none}
+  .cover .thread-hero path,.js .circle-w svg path,.js .knot-final path,.js .knot-final circle{stroke-dashoffset:0}
+  .js .u{background-size:100% 48%}
 }
 @media (max-width:640px){
-  .sheet{border-radius:18px 18px 0 0;margin-top:-20px;
-    padding:calc(var(--pad) + 24px) calc(var(--pad) + 4px) calc(var(--pad) + 8px) calc(var(--pad) + 24px)}
-  .cover .toc{grid-template-columns:1fr 1fr}
+  .sheet{border-radius:12px 12px 0 0;margin-top:-14px;
+    padding:calc(var(--pad) + 20px) calc(var(--pad) + 2px) calc(var(--pad) + 6px)}
+  .cover .toc{grid-template-columns:1fr}
+  /* nit na mobilu: horizontální progress nahoře, žádný uzly nalepený na text */
+  .rail{left:0;right:0;top:0;bottom:auto;width:auto;height:2px;background:transparent}
+  .rail .fill{width:var(--p,0%);height:100%}
+  .rail .knot,.rail .hit{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- červená nit: kolejnice s uzlama -->
 <nav class="rail" aria-label="Kapitoly"><div class="fill"></div></nav>
+<button class="pill" id="pill" aria-haspopup="true" aria-controls="chmenu"><span class="dot">●</span>Obsah</button>
+<div class="chmenu" id="chmenu" hidden role="dialog" aria-label="Obsah">
+  <button class="close" aria-label="Zavřít">✕</button>
+  <nav></nav>
+</div>
 
 <!-- ============ OBÁLKA ============ -->
 <header class="sheet t0 cover" id="top">
   <div class="sheet-inner cover" style="min-height:calc(100svh - var(--pad)*2)">
     <div class="bar">
-      <span>KLÁRA SCHOLLEOVÁ</span>
-      <span>EDICE 2026</span>
+      <span>Klára Scholleová</span>
+      <span>Edice 2026</span>
     </div>
     <h1>Jak do <span class="ux">UX</span></h1>
     <svg class="thread-hero" viewBox="0 0 640 64" aria-hidden="true">
       <path d="M0,14 C110,14 150,50 300,50 C420,50 440,18 560,18 L640,18"/>
     </svg>
-    <p class="sub">Subjektivní, nespisovnej a upřímnej guide pro aspirující UXáky — v době, kdy AI generuje obrazovky a výmluvy umřely.</p>
-    <div class="draft-note" role="note">
-      <b>🧵 PRACOVNÍ VERZE — V REVIZI</b><br>
-      Tahle edice je čerstvě sešitá a ještě prochází revizí — něco se může změnit nebo úplně vypadnout.
-      Něco nesedí? <a href="mailto:klara.scholleova@gmail.com">Napište mi</a>, nebo mě chyťte na kempu.
-    </div>
+    <p class="sub">Subjektivní, nespisovnej a <em>upřímnej</em> guide pro aspirující UXáky — v době, kdy AI generuje obrazovky a výmluvy umřely.</p>
     <div class="toc">
       <a href="#s1"><b>01</b> Úvod</a>
       <a href="#s2"><b>02</b> Ukaž, že umíš shipovat</a>
@@ -340,7 +341,7 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 01 ÚVOD ============ -->
 <section class="sheet t1" id="s1">
   <div class="sheet-inner">
-    <div class="numeral">01 · ÚVOD</div>
+    <div class="numeral"><b>01</b>Úvod</div>
     <h2 class="reveal">Nezávidim vám to.<br>Ale nevzdávejte to.</h2>
     <p class="reveal">Přiznám se, že to začínajícím UXákům nezávidim. Zájemců o juniorní pozice je pořád bezprecedentní množství a s poptávkou jde i nabídka nepřebernýho množství bootcampů a knížecích rad (ne že bych tímhle trochu nepřidávala).</p>
     <p class="reveal">Ale nevzdávejte to 💪 Šikovný a chytrý lidi se neztratěj — a upřímně, díky AI má šikovnej člověk dneska víc způsobů, jak <span class="u">vystoupit z davu</span>, než kdy dřív. O tom bude velká část týhle aktualizace.</p>
@@ -349,9 +350,9 @@ details summary::-webkit-details-marker{display:none}
     <h3 class="reveal">Disclaimer / můj bias</h3>
     <p class="reveal"><strong>Tenhle text není instrukce a já dost možná nemám pravdu.</strong> Píšu to, jak bych vám to říkala v hospodě. Berte si jen to, co vám dává smysl, a validujte to s jinejma lidma.</p>
     <p class="reveal">Píšu to po víc než sedmi letech v UX (a ještě delší době freelancingu v grafice, webdesignu a kódění), jako senior v globální produktový firmě — s výhledem do českýho rybníčku i s čerstvou zkušeností člověka, co posuzuje kandidáty od juniorů po seniory.</p>
-    <div class="aside reveal">
-      <span class="emoji">💡</span>
-      <strong>Nejlepší rada hned na začátek: přidejte se do <a href="https://www.asociaceux.cz/clenstvi-v-aux">Asociace UX</a>.</strong> Nejlíp investovaný pětikilo na týhle cestě — hlavně kvůli Slacku, kde jsou všichni super český UXáci, kvůli <a href="https://www.meetup.com/asociace-ux/">UX Mondays</a> a lidem, který potkáte na <a href="https://realuxcamp.com/">RealUXCampu</a>.
+    <div class="block reveal">
+      <span class="lbl">Tip na začátek</span>
+      <p><strong>Přidejte se do <a href="https://www.asociaceux.cz/clenstvi-v-aux">Asociace UX</a>.</strong> Nejlíp investovaný pětikilo na týhle cestě — hlavně kvůli Slacku, kde jsou všichni super český UXáci, kvůli <a href="https://www.meetup.com/asociace-ux/">UX Mondays</a> a lidem, který potkáte na <a href="https://realuxcamp.com/">RealUXCampu</a>.</p>
     </div>
   </div>
 </section>
@@ -359,29 +360,32 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 02 SHIP IT ============ -->
 <section class="sheet t2" id="s2">
   <div class="sheet-inner">
-    <div class="numeral">02 · NOVÁ DOBA</div>
+    <div class="numeral"><b>02</b>Nová doba</div>
     <h2 class="reveal">Ukaž, že umíš shipovat</h2>
     <p class="reveal">Když jsem tenhle text psala poprvý (2024), platilo: nauč se základy, udělej si projekt, hezky ho odvyprávěj v portfoliu. To platí furt. Ale mezitím se stala zásadní věc: <strong>s AI nástrojema dneska naprototypuješ — a klidně nasadíš — funkční věc za víkend.</strong></p>
-    <p class="reveal">Což znamená jediný: <strong>výmluvy umřely.</strong> Dřív mohl junior říct <span class="strike">„neumím kódovat, tak mám jen mockupy do šuplíku"</span>. Dneska můžeš mít živou věc, kterou si lidi fakt osahali. A bacha — když ji můžeš mít ty, můžou ji mít i všichni ostatní kandidáti.</p>
-    <p class="claim reveal">Vygenerovat věc — to dneska dokáže každej. <span class="circle-w">Odladit experience<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M8,30 C8,8 192,4 192,26 C192,52 20,58 12,38"/></svg></span> je ta práce.</p>
-    <p class="reveal">A přesně tady se pozná designer: <strong>že z toho, co si dneska vygeneruje každej, umíš udělat něco inovativního.</strong> AI umí vyplivnout obrazovku. Neumí poznat, že je blbě.</p>
+    <p class="reveal">Což znamená jediný: <strong>výmluvy umřely.</strong> Dřív mohl junior říct <span class="rip">„neumím kódovat, tak mám jen mockupy do šuplíku“<sup>†&thinsp;2024</sup></span>. Dneska můžeš mít živou věc, kterou si lidi fakt osahali. A bacha — když ji můžeš mít ty, můžou ji mít i všichni ostatní kandidáti.</p>
+    <p class="claim reveal">Vygenerovat věc — to dneska dokáže každej. <span class="circle-w"><em>Odladit experience</em><svg viewBox="0 0 200 24" preserveAspectRatio="none"><path d="M4,7 C70,3 150,2 196,6 C197,9 193,11 187,12 C120,16 50,15 7,18"/></svg></span> je ta práce.</p>
+    <p class="reveal">A přesně tady se pozná designer: <strong>že z toho, co si dneska vygeneruje každej, umíš udělat něco fakt odladěnýho.</strong> AI umí vyplivnout obrazovku. Neumí poznat, že je blbě.</p>
     <p class="reveal">Junior roku 2026 se podle mě pozná takhle: vezme vygenerovanou věc, dá ji lidem do rukou, kouká, kde se zasekávaj, a iteruje. To je celej UX proces v kostce — a poprvý v historii ho můžeš mít v portfoliu <em>celej</em>: od problému přes nasazenou věc po reálnou zpětnou vazbu a iterace.</p>
-    <div class="aside reveal">
-      <span class="emoji">🔥</span>
-      <strong>Nový pravidlo: neshipnutej sideprojekt je jen prezka.</strong> Nejsilnější artefakt v portfoliu 2026 není caska s personama — je to odkaz na věc, co žije, a příběh o tom, cos na ní odladila.
+    <p class="reveal">(A jestli z týhle kapitoly máte úzkost: klid. Řemeslo, metody a přemejšlení o problému — celej zbytek tohohle textu — platěj furt a jsou důležitější než kterejkoliv nástroj. AI je násobí, nenahrazuje.)</p>
+    <div class="block reveal">
+      <span class="lbl">Nový pravidlo</span>
+      <p><strong>Neshipnutej sideprojekt je jen prezka.</strong> Nejsilnější artefakt v portfoliu 2026 není caska s personama — je to odkaz na věc, co žije, a příběh o tom, cos na ní odladila.</p>
     </div>
-    <svg class="thread-sep" viewBox="0 0 420 30" aria-hidden="true"><path d="M0,16 C90,16 120,6 210,6 C300,6 330,24 420,24"/></svg>
     <h3 class="reveal">Co to znamená prakticky</h3>
     <ul class="reveal">
-      <li><strong>AI literacy je nová základní výbava.</strong> Umět s AI navrhovat, prototypovat, analyzovat výzkum — a hlavně chápat, kde AI kecá a kdy jí nevěřit. Hiring manažeři to budou čim dál víc čekat jako samozřejmost, podobně jako Figmu.</li>
-      <li><strong>Nástroje se měněj každej kvartál, princip ne.</strong> Dneska se mluví o Figma Make, Claude, Cursoru, v0, Lovable — za rok to může bejt jinak. Neučte se „nástroj", učte se ten workflow: problém → prompt → prototyp → test s lidma → iterace.</li>
+      <li><strong>AI literacy je nová základní výbava.</strong> Umět s AI navrhovat, prototypovat, analyzovat výzkum — a hlavně chápat, kde AI kecá a kdy jí nevěřit. Hiring manažeři to budou čim dál víc čekat jako samozřejmost.</li>
+      <li><strong>Nástroje se měněj každej kvartál, princip ne.</strong> Dneska se mluví o Figma Make, Claude, Cursoru, v0, Lovable — za rok to může bejt jinak. Neučte se „nástroj“, učte se ten workflow: problém → prompt → prototyp → test s lidma → iterace.</li>
       <li><strong>Vibe-coded odpad není ship.</strong> Vygenerovat appku a hodit ji na net není to, o čem mluvím. Ship znamená: má to uživatele (klidně tři!), sledovalas, jak to používaj, a máš verzi 2, která je lepší — a víš proč.</li>
-      <li><strong>Cesta k řešení je taky design.</strong> Skill dobrýho designera je vymyslet, jak na konkrétní problém jít nejefektivnějc — co si jen načmárat na papír, co naklikat, co fakt postavit a s kým to otestovat. AI ti dá rychlost; kudy, to musíš rozhodnout ty.</li>
+      <li><strong>Cesta k řešení je taky design.</strong> Skill dobrýho designera je neskočit rovnou do řešení — napřed pochopit problém a vymyslet, jak na něj jít nejefektivnějc: co si jen načmárat na papír, co naklikat, co fakt postavit a s kým to otestovat. AI ti dá rychlost; kudy, to musíš rozhodnout ty.</li>
+      <li><strong>Patterny a základy vás odlišej od generickýho AI buildera.</strong> AI plive obrazovky, ale proč kterej pattern funguje, kde je konvence a kde omyl — to je vaše parketa, a platí to stejně jako před deseti lety. A přibejvaj nový, AI-specifický (viz <a href="#s7">Zdroje</a>).</li>
       <li><strong>Judgment je to, co prodáváš.</strong> Čím víc toho AI vygeneruje, tím vzácnější je člověk, kterej pozná, co je dobrý, co špatně a proč. Trénink oka a myšlení je díky tomu důležitější, ne míň.</li>
     </ul>
-    <div class="aside reveal">
-      <span class="emoji">🎤</span>
-      <strong>Co se dneska zkoumá na pohovorech?</strong> Kompletní přehled nemám — ale můžu říct, co vidím: otázku <em>„jak používáš AI"</em> dostávám i já. Mějte na ni odpověď s konkrétníma příkladama: kde vám AI práci zrychlila, kde kecala, a jak jste to poznali.
+    <p class="reveal">A ještě meta-tip: <strong>nejlepší učitel týhle smyčky je AI sama.</strong> Klidně to zkoušejte napřeskáčku — někdy hned shipujte a testujte, jindy víc ideujte, nechte si zkritizovat návrh, vysvětlit, proč AI použila zrovna tenhle pattern. Zlepšujou se vám dvě věci naráz: práce s AI i designový základy.</p>
+    <div class="block reveal">
+      <span class="lbl">Pohovory 2026</span>
+      <p><strong>Co se dneska zkoumá?</strong> Kompletní přehled nemám — ale můžu říct, co vidím: otázku <em>„jak používáš AI“</em> dostávám i já. Mějte na ni odpověď s konkrétníma příkladama: kde vám AI práci zrychlila, kde kecala, a jak jste to poznali.</p>
+      <p>A pozor na opačnej extrém: když na otázku „jak bys řešil X“ začnete popisovat prototypování v AI nástroji, spousta hiring manažerů přestává poslouchat. <strong>Nástroj není odpověď na problém.</strong></p>
     </div>
   </div>
 </section>
@@ -389,28 +393,27 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 03 JAK BYCH NA TO ŠLA ============ -->
 <section class="sheet t3" id="s3">
   <div class="sheet-inner">
-    <div class="numeral">03 · STRATEGIE</div>
+    <div class="numeral"><b>03</b>Strategie</div>
     <h2 class="reveal">Jak bych na to (asi) šla já</h2>
     <ol class="reveal">
-      <li><strong>Naučila bych se co nejvíc zadarmo</strong> z netu a knížek (viz <a href="#s7">Zdroje</a>) — a zjistila, jestli je ten obor vůbec pro mě. Start: Google kurz na YouTube, moje punkový webináře, nebo kurz Toma Pauluse. Knížky: <em>User Experience Team of One</em>, <em>Think First</em>, <em>Just Enough Research</em>.</li>
-      <li><strong>Trénovala bych mozek, oči a ruce</strong> — přemýšlení o problémech s tužkou v ruce, pořádná Figma jako řemeslo, cit pro hierarchii.</li>
-      <li><strong>Sehnala bych si projekt — a shipla ho.</strong> Dřív stačilo <span class="strike">„na něčem fakt pracovat"</span>, dneska bych to rovnou stavěla, testovala a iterovala (viz <a href="#s2">kapitola 02</a>).</li>
-      <li><strong>Sehnala bych si mentora</strong> (<a href="https://www.femmepalette.com/mentors">Femme Palette</a> — tam jsem jako dobrovolnej mentor i já — nebo <a href="https://adplist.org/">ADPList</a>), kterej mě usměrní.</li>
+      <li><strong>Naučila bych se co nejvíc zadarmo</strong> z netu a knížek (viz <a href="#s7">Zdroje</a>) — a zjistila, jestli je ten obor vůbec pro mě.</li>
+      <li><strong>Trénovala bych mozek, oči a ruce</strong> — přemýšlení o problémech s tužkou v ruce, cit pro hierarchii, základy řemesla.</li>
+      <li><strong>Sehnala bych si projekt — a shipla ho.</strong> Dřív stačilo <span class="rip">„na něčem fakt pracovat“<sup>†&thinsp;2024</sup></span>, dneska bych to rovnou stavěla, testovala a iterovala (viz <a href="#s2">kapitola 02</a>).</li>
+      <li><strong>Sehnala bych si mentora.</strong> Ne přes mentoringový platformy — napište do <em>#mentoring</em> na Slacku Asociace UX, nebo se prostě ozvěte někomu, kdo vám je sympatickej, na LinkedInu či IG. Lidi rádi pomůžou, i když nejsou nikde vedený jako „mentoři“ — jen k nim přistupujte s pokorou a připravenejma otázkama.</li>
       <li>K 1–4 bych přistupovala <strong>s cílem udělat ze sebe dobrýho juniora</strong> a získat práci.</li>
       <li>A furt bych hledala, <strong>v čem se ještě můžu zlepšovat.</strong></li>
     </ol>
-    <div class="aside reveal">
-      <span class="emoji">☝️</span>
-      <strong>Networkujte a choďte na akce.</strong> Žádná knížka ani bootcamp nenahradí pokec s lidma z oboru. <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> každý pondělí, <a href="https://realuxcamp.com/">RealUXCamp</a> jednou za rok, Slack Asociace UX pořád. Win-win: vy nasajete know-how — a oni si vás zapamatujou, až budou nabírat 😼
+    <div class="block reveal">
+      <span class="lbl">Networking</span>
+      <p><strong>Choďte na akce.</strong> Žádná knížka ani bootcamp nenahradí pokec s lidma z oboru. <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> každý pondělí, <a href="https://realuxcamp.com/">RealUXCamp</a> jednou za rok, Slack Asociace UX pořád. Win-win: vy nasajete know-how — a oni si vás zapamatujou, až budou nabírat 😼</p>
     </div>
     <h3 class="reveal">Bootcampy? Nevim. Vejšky? Máme</h3>
     <p class="reveal">Můj skeptickej pohled na bootcampy platí: většinou učej kuchařku, kterou pak absolventi aplikujou na všechno bez posouzení kontextu, a hard skilly nedaj. Když už, vyberte si takovej, kde vaši práci hodnotí mentor, ne spolužáci. A vejšky — <a href="https://kisk.phil.muni.cz/profilace/design-informacnich-sluzeb">KISK MUNI</a>, <a href="https://fis.vse.cz/magisterske-studium/magisterske-programy/ux-vyzkum-a-design-ist/">UX magistr na VŠE</a>, <a href="https://oi.fel.cvut.cz/cs/mgr-specializace-interakce-cloveka-s-pocitacem-2016">HCI na FELu</a> — zůstávaj dobrá volba, pokud jste v tom životním stádiu.</p>
-    <svg class="thread-sep" viewBox="0 0 420 30" aria-hidden="true"><path d="M0,10 C120,10 150,24 240,24 C330,24 360,8 420,8"/></svg>
     <h3 class="reveal">Btw, nemusí to bejt pro všechny — and it's okay</h3>
     <p class="reveal">Vyhodnotit, že to celý třeba cesta není, není žádná prohra — to je validní výsledek. Příležitostí je pro chytrý a šikovný lidi dost i mimo UX. A nakonec — UX produktu stejně tvoří všichni ve firmě, ne jen UXáci.</p>
-    <div class="aside reveal">
-      <span class="emoji">🧠</span>
-      <strong>Cvičení, co radím sobě i svým mentees:</strong> Zamyslete se, co jste doteď dělali — v práci, ve škole, na projektech. Pak si promítněte, <strong>co přesně vás na tom bavilo.</strong> Že něco funguje? Že jste někomu pomohli? Proces, nebo výsledek? Nechtějte designovat „for the sake of it" — jděte po tom, co vám je přirozený. (Tohle cvičení si dávám sama dodneška, abych se zacílila i v rámci vlastní kariéry.)
+    <div class="block reveal">
+      <span class="lbl">Cvičení</span>
+      <p>Zamyslete se, co jste doteď dělali — v práci, ve škole, na projektech. Pak si promítněte, <strong>co přesně vás na tom bavilo.</strong> Že něco funguje? Že jste někomu pomohli? Proces, nebo výsledek? Nechtějte designovat „for the sake of it“ — jděte po tom, co vám je přirozený. (Tohle cvičení si dávám sama dodneška, abych se zacílila i v rámci vlastní kariéry.)</p>
     </div>
   </div>
 </section>
@@ -418,25 +421,26 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 04 CO SE ČEKÁ ============ -->
 <section class="sheet t4" id="s4">
   <div class="sheet-inner">
-    <div class="numeral">04 · KVALITY</div>
+    <div class="numeral"><b>04</b>Kvality</div>
     <h2 class="reveal">Co se čeká od juniorních designerů</h2>
-    <p class="kicker reveal">— mix toho, co u nich hledám já a co hledaj kolegové, jichž si vážim</p>
-    <h3 class="reveal">1 · Schopnost dobře se ptát; empatie, zvídavost</h3>
+    <p class="kicker reveal">mix toho, co u nich hledám já a co hledaj kolegové, jichž si vážim</p>
+    <h3 class="reveal"><span class="hn">01</span>Schopnost dobře se ptát; empatie, zvídavost</h3>
     <p class="reveal">UX práce je o ptaní se — uživatelů, business stakeholderů, vývojářů — a o schopnosti opravdu porozumět jejich potřebám a celý doméně. <em>(Tip: u pohovoru dost hiring manažerů posuzuje, jak a na co se ptáte vy jich 😉)</em></p>
-    <h3 class="reveal">2 · „Už něco načteno a odmakáno" a zápal se posouvat</h3>
-    <p class="reveal">Nikdo nečeká, že budete hned ve všem excelovat — do začátku jde o „od všeho aspoň něco": základy teorie, metod a nástrojů, vytrénovaný <strong>designový vidění světa</strong> (napřed přemýšlet, <span class="u">jak to bude fungovat pro lidi</span>, pak jak to vypadá) a Figma jako řemeslo — framy, autolayout, komponenty. Žádný obdélníky ve skupinách, jo? 🙂</p>
-    <div class="aside reveal">
-      <span class="emoji">⚠️</span>
-      <strong>Hrozně důležitý: business musí vydělávat peníze 💰</strong> Teorie je růžovej svět, kterej se točí kolem uživatelů — ale vaším úkolem je hledat win-wins s dobrým poměrem cena/výkon: co nejmenší úsilí, co největší přínos pro zákazníky i business. Proto se tolik rolí jmenuje <em>product</em> designer.
+    <h3 class="reveal"><span class="hn">02</span>„Už něco načteno a odmakáno“ a zápal se posouvat</h3>
+    <p class="reveal">Nikdo nečeká, že budete hned ve všem excelovat — do začátku jde o „od všeho aspoň něco“: základy teorie, metod a nástrojů, a vytrénovaný <strong>designový vidění světa</strong> — napřed přemýšlet, <span class="u">jak to bude fungovat pro lidi</span>, pak jak to vypadá. A vedle hard skillů „soft“ minimum, který design leadeři jmenujou na prvním místě: <strong>chtít zpětnou vazbu, umět komunikovat, otevřená hlava a chuť si to odmakat.</strong></p>
+    <p class="reveal">A Figma? <strong>Většina jobů ji v roce 2026 pořád vyžaduje</strong> — tempo AI adopce se firma od firmy hodně různí. Léta jsem říkala, že autolayout a komponenty jsou nejjednodušší didaktická cesta k systematickýmu přemýšlení o UI — jednodušší než jít rovnou do frontendu. Dneska si čim dál víc myslim, že <strong>když na to máte, učte se rovnou ten frontend</strong> — je to ten skutečnej systém, ve kterým váš návrh nakonec žije. Ale Figma se pořád skvěle hodí na to, co dělaly skici odjakživa: <strong>staromódně si něco nakreslit,</strong> rychle to promyslet a ukázat ostatním. (A když už v ní jste: autolayout, komponenty, žádný obdélníky ve skupinách, jo? 🙂)</p>
+    <div class="block reveal">
+      <span class="lbl">Důležitý</span>
+      <p><strong>Business musí vydělávat peníze 💰</strong> Teorie je růžovej svět, kterej se točí kolem uživatelů — ale vaším úkolem je hledat win-wins s dobrým poměrem cena/výkon: co nejmenší úsilí, co největší přínos pro zákazníky i business. Proto se tolik rolí jmenuje <em>product</em> designer.</p>
     </div>
-    <h3 class="reveal">3 · Umět shipovat — a odladit, co AI vyplivne</h3>
+    <h3 class="reveal"><span class="hn">03</span>Umět shipovat — a odladit, co AI vyplivne</h3>
     <p class="reveal">Nová položka na seznamu, viz <a href="#s2">kapitola 02</a>. U pohovoru chci slyšet: co jsi postavila, kdo to používal, co ses dozvěděla a co jsi změnila. AI nástroje ovládat — ale nebejt jejich rukojmí.</p>
-    <h3 class="reveal">4 · Zkušenost řešit problémy a učit se z nich</h3>
-    <p class="reveal">Paradox „jak mám mít zkušenost, když hledám první zkušenost" řešej <strong>osobní projekty.</strong> Spolupráce se zadavatelem a omezení reálnýho světa vás naučej víc než teoretickej domácák. A nemusí to bejt jen UI — klidně pomoc neziskovce s procesama nebo návrh webu kámošovi. Platí <strong>„outcomes over outputs"</strong>: hodnota je umět formulovat cíl a vymyslet cestu k němu.</p>
-    <blockquote class="reveal">5× bych podtrhl potřebu co nejdřív si najít nějaký svůj projekt, klidně for free, a začít všechnu tu hezky znějící teorii dost pracně aplikovat do praxe.<cite>— Tobiáš Vybíral, předseda Asociace UX</cite></blockquote>
-    <div class="aside reveal">
-      <span class="emoji">🧑‍💻</span>
-      <strong>Můj unpopular opinion, dnes populárnější než kdy dřív:</strong> designer, co chce dělat UI, by měl chápat základy HTML, CSS a ideálně JS. V AI době to platí dvojnásob — víte, co vám AI vlastně generuje, a poznáte, kdy je to nesmysl. Nejlepší zdroj je <a href="https://developer.mozilla.org/en-US/docs/Learn">MDN</a>. (A jo, pořád platí: jedině React 😂)
+    <h3 class="reveal"><span class="hn">04</span>Zkušenost řešit problémy a učit se z nich</h3>
+    <p class="reveal">Paradox „jak mám mít zkušenost, když hledám první zkušenost“ řešej <strong>osobní projekty.</strong> Spolupráce se zadavatelem a omezení reálnýho světa vás naučej víc než teoretickej domácák. A nemusí to bejt jen UI — klidně pomoc neziskovce s procesama nebo návrh webu kámošovi. Platí <strong>„outcomes over outputs“</strong>: hodnota je umět formulovat cíl a vymyslet cestu k němu.</p>
+    <blockquote class="reveal">„5× bych podtrhl potřebu co nejdřív si najít nějaký svůj projekt, klidně for free, a začít všechnu tu hezky znějící teorii dost pracně aplikovat do praxe.“<cite>Tobiáš Vybíral · předseda Asociace UX</cite></blockquote>
+    <div class="block reveal">
+      <span class="lbl">Unpopular opinion — dnes populárnější než kdy dřív</span>
+      <p>Designer, co chce dělat UI, by měl chápat základy HTML, CSS a ideálně JS. V AI době to platí dvojnásob — víte, co vám AI vlastně generuje, a poznáte, kdy je to nesmysl. Nejlepší zdroj je <a href="https://developer.mozilla.org/en-US/docs/Learn">MDN</a>. (A jo, pořád platí: jedině React 😂)</p>
     </div>
   </div>
 </section>
@@ -444,21 +448,22 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 05 PORTFOLIO ============ -->
 <section class="sheet t5" id="s5">
   <div class="sheet-inner">
-    <div class="numeral">05 · PORTFOLIO A CV</div>
+    <div class="numeral"><b>05</b>Portfolio a CV</div>
     <h2 class="reveal">Recruiteři na vás nemají čas</h2>
     <p class="reveal">Krutá, ale zároveň velmi ulehčující pravda: <strong>recruiteři a hiring manažeři to prolítnou a udělaj si dojem.</strong> Takže:</p>
     <ul class="reveal">
       <li><strong>První dojem se dělá jednou</strong> — a klidně už ve zprávě na LinkedInu nebo v mailu, ne až v portfoliu.</li>
       <li><strong>Musí to jít proscanovat</strong> — show, don't tell. Už tím demonstrujete design skill.</li>
-      <li>Navrch jasně napište, <strong>kdo jste a čím jste zajímaví.</strong> „Nadšenej junior designer 🦄" není hodnotná informace — background z předchozí profese je vaše výhoda, ne handicap.</li>
+      <li>Navrch jasně napište, <strong>kdo jste a čím jste zajímaví.</strong> „Nadšenej junior designer 🦄“ není hodnotná informace — background z předchozí profese je vaše výhoda, ne handicap.</li>
       <li><strong>Web, PDF nebo Google Slides — ne Figma link.</strong> Každá milisekunda načítání je kapka frustrace člověka, kterej vás posuzuje.</li>
       <li><strong>Casky krátký,</strong> žádný romány: 1. hmatatelnej výsledek (hezkej obrázek), 2. stav před — ať je vidět zlepšení, 3. o co šlo a co byla vaše role (2 odstavce, odvyprávějte příběh), 4. dopad — ideálně čísla. <strong>A nejsilnější caska 2026 = odkaz na živou věc + co jste na ní odladili.</strong></li>
       <li><strong>Žádný checklisty metod a graficky vypiplaný persony.</strong> Outcomes over outputs — jinak jste nerozeznatelný od <a href="https://essays.uxdesign.cc/case-study-factory/">case study factory</a>.</li>
+      <li><strong>Šla bych s kůží na trh — ale s věcma, ne s názorama.</strong> Věci do šuplíku nikdo neuvidí, takže když něco postavíte, dotáhnete nebo se fakt naučíte, ukažte to. Což není výzva k plnění LinkedInu hot takes o designu — shipnutej projekt s příběhem řekne víc než deset zamyšlení. A umět prodat svoji práci se vám bude hodit i pak, uvnitř firmy.</li>
     </ul>
     <p class="reveal">A mimochodem — <a href="https://medium.com/@vorkronor/why-calling-yourself-a-junior-is-hurting-your-professional-growth-78b0c4147cf0">Petr Štědrý krásně napsal, proč si neříkat junior</a>. Vaše portfolio je navíc design projekt sám o sobě: máte zadavatele, dopady svý práce i vlastní design system. Nejlepší první zkušenost there is.</p>
-    <div class="aside reveal">
-      <span class="emoji">📄</span>
-      <strong>CV tipy (od Vaška, recruitera):</strong> vždycky PDF, nikdy docx. Klíčový slova z inzerátu, <a href="https://www.indeed.com/career-advice/resumes-cover-letters/ats-resume-template">ATS-readable</a>, bez překlepů — hlavně v mailu, ať vám vůbec dojde pozvánka na pohovor. Recruiter ve výpisu skenuje jména firem a názvy pozic.
+    <div class="block reveal">
+      <span class="lbl">CV tipy od recruitera</span>
+      <p>Vždycky PDF, nikdy docx. Klíčový slova z inzerátu, <a href="https://www.indeed.com/career-advice/resumes-cover-letters/ats-resume-template">ATS-readable</a>, bez překlepů — hlavně v mailu, ať vám vůbec dojde pozvánka na pohovor. Recruiter ve výpisu skenuje jména firem a názvy pozic. <em>(díky, Vašku)</em></p>
     </div>
   </div>
 </section>
@@ -466,12 +471,12 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 06 SLOVNÍČEK ============ -->
 <section class="sheet t6" id="s6">
   <div class="sheet-inner">
-    <div class="numeral">06 · SLOVNÍČEK</div>
+    <div class="numeral"><b>06</b>Slovníček</div>
     <h2 class="reveal">Co byste měli znát</h2>
-    <p class="reveal">Nekompletní seznam pojmů „z hlavy". Klikejte — a pak se AI ptejte nejen co znamenaj, ale hlavně <strong>kdy je použít.</strong></p>
+    <p class="reveal">Nekompletní seznam pojmů „z hlavy“. Klikejte — a pak se AI ptejte nejen co znamenaj, ale hlavně <strong>kdy je použít.</strong></p>
     <div class="chips reveal" id="chips"></div>
     <div class="defbox" id="defbox" aria-live="polite">
-      <div class="term">👆 vyber si pojem</div>
+      <div class="term">Vyber si pojem ↑</div>
       <p>Každej z nich je vstupní bod do kusu oboru.</p>
     </div>
   </div>
@@ -480,52 +485,55 @@ details summary::-webkit-details-marker{display:none}
 <!-- ============ 07 ZDROJE ============ -->
 <section class="sheet t6 res" id="s7">
   <div class="sheet-inner">
-    <div class="numeral">07 · ZDROJE</div>
+    <div class="numeral"><b>07</b>Zdroje</div>
     <h2 class="reveal">Co za to fakt stojí</h2>
-    <p class="kicker reveal">radikálně zkrácenej, kurátorovanej výběr — míň je víc</p>
+    <p class="kicker reveal">kurátorovanej výběr — míň je víc</p>
     <h3 class="reveal">Základ zadarmo</h3>
     <ul class="reveal">
-      <li><a href="https://www.nngroup.com/">NN/g</a> (web + <a href="https://www.youtube.com/@NNgroup">YouTube</a>) — <em>ta</em> autorita oboru; začněte u <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">10 Usability Heuristics</a></li>
-      <li><a href="https://www.youtube.com/watch?v=_PFqcMh7Uqk&list=PLTZYG7bZ1u6oHnGp4Ib3n0y-CmFQdTW6r&index=5">Google UX kurz na YouTube</a> — zadarmo; placenej certifikát nepotřebujete</li>
+      <li><a href="https://www.nngroup.com/">NN/g</a> (web + <a href="https://www.youtube.com/@NNgroup">YouTube</a>) — <em>ta</em> autorita oboru; začněte u <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">10 Usability Heuristics</a> (a k AI maj čim dál víc střízlivýho, evidence-based obsahu)</li>
+      <li><a href="https://www.shapeof.ai/">Shape of AI</a> — katalog UX patternů pro AI produkty; nový vzory (konverzace, agenti, důvěra) pěkně pojmenovaný a s příkladama</li>
       <li><a href="https://lawsofux.com/">Laws of UX</a> + <a href="https://growth.design/">Growth.design</a> — psychologie v UX, podaný zábavně</li>
       <li><a href="https://kisk.phil.muni.cz/100metod">100metod.cz</a> — nejlepší českej UX zdroj ever</li>
-      <li>Moje punkový webináře pro Česko.digital — <a href="https://www.youtube.com/watch?v=f8amf7sMxv8">intro do UX</a>, <a href="https://youtu.be/1HjmWlwPzJA">do UI</a> a <a href="https://www.youtube.com/watch?v=D7A4gOwwgoQ">do Figmy</a></li>
+      <li><a href="https://www.youtube.com/watch?v=_PFqcMh7Uqk&list=PLTZYG7bZ1u6oHnGp4Ib3n0y-CmFQdTW6r&index=5">Google UX kurz na YouTube</a> — na základy pořád fajn a zadarmo; jen počítejte, že je z doby před AI (a placenej certifikát nepotřebujete)</li>
+    </ul>
+    <h3 class="reveal">Základy frontendu</h3>
+    <ul class="reveal">
+      <li><a href="https://developer.mozilla.org/en-US/docs/Learn">MDN Learn</a> — učebnice webu; HTML a CSS odsud, žádný pochybný tutoriály</li>
+      <li><a href="https://www.freecodecamp.org/">freeCodeCamp</a> — když chcete strukturu a projekty</li>
+      <li>A nechte si od AI vysvětlovat kód, kterej vám generuje — nejrychlejší FE učitel, co kdy byl</li>
     </ul>
     <h3 class="reveal">Knížky — timeless</h3>
     <ul class="reveal">
       <li><strong>The User Experience Team of One</strong> (Buley) — s čím vším budete bojovat v reálný firmě</li>
       <li><strong>Think First</strong> (Natoli) — nedoceněná, rychlá; ta důležitá business protiváha</li>
       <li><strong>Just Enough Research</strong> (Hall) — výzkum jde dělat dobře i jednoduše</li>
-      <li><strong>The Design of Everyday Things</strong> (Norman) — „beletrie" na před spaním; otevře vám oči a možná vás začnou štvát věci, co vás předtím neštvaly</li>
+      <li><strong>The Design of Everyday Things</strong> (Norman) — „beletrie“ na před spaním; otevře vám oči a možná vás začnou štvát věci, co vás předtím neštvaly</li>
       <li><strong>Don't Make Me Think</strong> (Krug) — starší, ale jak nedělat věci debilní platí dodnes</li>
     </ul>
     <h3 class="reveal">Placený, čemu bych věřila</h3>
     <ul class="reveal">
       <li><a href="https://www.simonjun.cz/kurzy/figma">Šimonův Figma MasterClass</a> (kód <code>klara10</code>) — Figmu i zkušený designeři používaj, inu, nedobře</li>
       <li><a href="https://skillmea.cz/online-kurzy/ux-design-polopate">Kurz Toma Pauluse</a> — za hubičku, základama provede pod 3 h</li>
-      <li><a href="https://www.interaction-design.org/courses">IxDF</a> — na akademičtější/výzkumnější/strategičtější témata, dobrej poměr cena/výkon</li>
+      <li><a href="https://www.interaction-design.org/courses">IxDF</a> — na akademičtější/výzkumnější témata; maj teď i kurz <a href="https://www.interaction-design.org/courses/ai-for-designers">AI for Designers</a></li>
     </ul>
     <h3 class="reveal">Česká komunita</h3>
     <ul class="reveal">
-      <li><a href="https://www.asociaceux.cz/clenstvi-v-aux">Slack UX CZ</a> · <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> · <a href="https://realuxcamp.com/">RealUXCamp</a> · newsletter <a href="https://www.reknisioweb.cz/">Řekni si o web</a></li>
+      <li><a href="https://www.asociaceux.cz/clenstvi-v-aux">Slack UX CZ</a> / <a href="https://www.meetup.com/asociace-ux/">UX Monday</a> / <a href="https://realuxcamp.com/">RealUXCamp</a> / newsletter <a href="https://www.reknisioweb.cz/">Řekni si o web</a></li>
     </ul>
-    <details class="reveal">
-      <summary>chci toho víc</summary>
-      <ul style="margin-top:10px">
-        <li><a href="https://uxcel.com/">UXcel</a> — takový „UX Duolingo" · <a href="https://www.figma.com/resource-library/design-basics/">Design basics od Figmy</a> — čtecí intro</li>
-        <li>UI řemeslo: <a href="https://m3.material.io/get-started">Material Design</a> a <a href="https://developer.apple.com/design/human-interface-guidelines">Apple HIG</a> designeři zkrátka znát musej · <a href="https://www.checklist.design/">Checklist Design</a> · <a href="https://ui-patterns.com/">UI-Patterns</a> · <a href="https://carbondesignsystem.com/">Carbon</a> · <a href="https://www.designsystems.com/">DesignSystems.com</a></li>
-        <li>Inspirace: <a href="https://mobbin.com/">Mobbin</a> (reálný appky) · <a href="https://www.awwwards.com/">awwwards</a> (webdesignerský porníčko)</li>
-        <li>Další knížky: <em>Sprint</em> (na facilitaci a historky, ne jako how-to) · <em>About Face</em> (Cooper) · <em>Designing for the Digital Age</em> (Goodwin — „učebnice", kterou nikdo nedočet)</li>
-        <li>Specializace: <a href="https://dune-harbor-fc1.notion.site/uxwritinghub">UX writing rozcestník od Lény</a> · <a href="https://www.proofreason.com/blog/kde-se-na-ucit-cx-36-5-uzitecnych-zdroju-o-zakaznicke-zkusenosti-z-cr-i-ze-zahranici">CX rozcestník od Terezy</a> · <a href="https://matejkaninsky.com/blog/ux-research-design-meta-repository/">Matějův meta-repo</a> · <a href="https://www.uxlibrary.org/">UX Library</a></li>
-      </ul>
-    </details>
+    <h3 class="reveal">A když toho chcete víc</h3>
+    <ul class="reveal">
+        <li>UI řemeslo: <a href="https://m3.material.io/get-started">Material Design</a> a <a href="https://developer.apple.com/design/human-interface-guidelines">Apple HIG</a> designeři zkrátka znát musej / <a href="https://www.checklist.design/">Checklist Design</a> / <a href="https://ui-patterns.com/">UI-Patterns</a> / <a href="https://carbondesignsystem.com/">Carbon</a> / <a href="https://www.designsystems.com/">DesignSystems.com</a></li>
+        <li>Inspirace: <a href="https://mobbin.com/">Mobbin</a> (reálný appky) / <a href="https://www.awwwards.com/">awwwards</a> (webdesignerský porníčko)</li>
+        <li>Další knížky: <em>Sprint</em> (na facilitaci a historky, ne jako how-to) / <em>About Face</em> (Cooper) / <em>Designing for the Digital Age</em> (Goodwin — „učebnice“, kterou nikdo nedočet)</li>
+        <li>Specializace: <a href="https://dune-harbor-fc1.notion.site/uxwritinghub">UX writing rozcestník od Léni Stawarczyk</a> / <a href="https://www.proofreason.com/blog/kde-se-na-ucit-cx-36-5-uzitecnych-zdroju-o-zakaznicke-zkusenosti-z-cr-i-ze-zahranici">CX rozcestník od Terezy</a> / <a href="https://matejkaninsky.com/blog/ux-research-design-meta-repository/">Matějův meta-repo</a> / <a href="https://www.uxlibrary.org/">UX Library</a></li>
+    </ul>
   </div>
 </section>
 
 <!-- ============ 08 OUTRO ============ -->
 <section class="sheet t-ink outro" id="s8">
   <div class="sheet-inner">
-    <div class="numeral">08 · OUTRO</div>
+    <div class="numeral"><b>08</b>Outro</div>
     <h2 class="reveal">🍾 A to je konec!</h2>
     <p class="reveal">Díky, že jste dočetli až sem — tentokrát to snad bylo kratší 😀 Pokud vám to k něčemu bylo, budu ráda za zmínku, sdílení, nebo mi na Mondayi kupte pivko. A pokud máte dotazy, feedback, nebo zájem o konzultaci — napište mi.</p>
     <div class="contacts reveal">
@@ -540,7 +548,7 @@ details summary::-webkit-details-marker{display:none}
         <circle cx="146" cy="58" r="3.5" style="fill:var(--red);stroke:none"/>
       </svg>
     </div>
-    <p class="sig reveal">Jak do UX · první verze 2024, tahle edice 2026 · díky český UX komunitě, Adri (že mě dokopala to vydat) a všem, co mi dali feedback: Tobiáš, Honza, Petr, Filip, Gabka, Dugi, Vašek a další 🙏</p>
+    <p class="sig reveal">Jak do UX — první verze 2024, tahle edice 2026. Díky český UX komunitě, Adri (že mě dokopala to vydat) a všem, co mi dali feedback: Tobiáš, Honza, Petr, Filip, Gabka, Dugi, Vašek, Tomáš a další 🙏</p>
   </div>
 </section>
 
@@ -548,17 +556,17 @@ details summary::-webkit-details-marker{display:none}
 /* ============ reveal on scroll ============ */
 const io = new IntersectionObserver(entries=>{
   for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }
-},{threshold:.18});
-document.querySelectorAll('.reveal, .claim, .thread-sep').forEach(el=>io.observe(el));
+},{threshold:.15});
+document.querySelectorAll('.reveal, .claim').forEach(el=>io.observe(el));
 
 /* ============ nit: progress + uzly + scrub ============ */
 const rail = document.querySelector('.rail');
 const fill = rail.querySelector('.fill');
 const sections = [...document.querySelectorAll('.sheet[id]')];
 const LABELS = {
-  top:'Obálka', s1:'01 · Úvod', s2:'02 · Ukaž, že umíš shipovat',
-  s3:'03 · Jak bych na to šla já', s4:'04 · Co se čeká od juniorů',
-  s5:'05 · Portfolio a CV', s6:'06 · Slovníček', s7:'07 · Zdroje', s8:'08 · Outro'
+  top:'Obálka', s1:'01 Úvod', s2:'02 Ukaž, že umíš shipovat',
+  s3:'03 Jak bych na to šla já', s4:'04 Co se čeká od juniorů',
+  s5:'05 Portfolio a CV', s6:'06 Slovníček', s7:'07 Zdroje', s8:'08 Outro'
 };
 const hit = document.createElement('div'); hit.className='hit'; rail.appendChild(hit);
 const knots = sections.map(sec=>{
@@ -570,6 +578,46 @@ const knots = sections.map(sec=>{
   rail.appendChild(k);
   return k;
 });
+function layoutKnots(){
+  const max = document.documentElement.scrollHeight - innerHeight;
+  sections.forEach((sec,i)=>{ knots[i].style.top = (Math.min(sec.offsetTop,max)/max*100)+'%'; });
+}
+function onScroll(){
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const p = Math.min(1, scrollY/max);
+  fill.style.setProperty('--p', (p*100)+'%');
+  sections.forEach((sec,i)=>knots[i].classList.toggle('passed', scrollY + 10 >= sec.offsetTop));
+  let cur = sections[0];
+  for(const s of sections){ if(scrollY + innerHeight*0.35 >= s.offsetTop) cur = s; }
+  const lbl = LABELS[cur.id];
+  pill.innerHTML = '<span class="dot">●</span>' + (cur.id==='top' ? 'Obsah' : lbl);
+  menuNav.querySelectorAll('a').forEach(a=>a.classList.toggle('cur', a.hash === '#'+cur.id));
+}
+/* mobilní obsah */
+const pill = document.getElementById('pill');
+const chmenu = document.getElementById('chmenu');
+const menuNav = chmenu.querySelector('nav');
+sections.forEach(sec=>{
+  const a = document.createElement('a');
+  a.href = '#'+sec.id;
+  const l = LABELS[sec.id];
+  const m = l.match(/^(\d+)\s(.*)$/);
+  a.innerHTML = m ? '<b>'+m[1]+'</b>'+m[2] : l;
+  a.addEventListener('click',e=>{
+    e.preventDefault(); closeMenu();
+    sec.scrollIntoView({behavior:'smooth'});
+  });
+  menuNav.appendChild(a);
+});
+function openMenu(){ chmenu.hidden=false; document.body.style.overflow='hidden'; }
+function closeMenu(){ chmenu.hidden=true; document.body.style.overflow=''; }
+pill.addEventListener('click',openMenu);
+chmenu.querySelector('.close').addEventListener('click',closeMenu);
+addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu(); });
+
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',()=>{layoutKnots();onScroll();});
+layoutKnots(); onScroll();
 
 /* scrub po niti (drag/touch) */
 let scrub = null;
@@ -589,19 +637,6 @@ hit.addEventListener('pointermove',e=>{ if(scrub) scrubTo(e.clientY); });
 function endScrub(){ rail.classList.remove('scrubbing'); knots.forEach(k=>k.classList.remove('show')); scrub=null; }
 hit.addEventListener('pointerup',endScrub);
 hit.addEventListener('pointercancel',endScrub);
-function layoutKnots(){
-  const max = document.documentElement.scrollHeight - innerHeight;
-  sections.forEach((sec,i)=>{ knots[i].style.top = (Math.min(sec.offsetTop,max)/max*100)+'%'; });
-}
-function onScroll(){
-  const max = document.documentElement.scrollHeight - innerHeight;
-  const p = Math.min(1, scrollY/max);
-  fill.style.height = (p*100)+'%';
-  sections.forEach((sec,i)=>knots[i].classList.toggle('passed', scrollY + 10 >= sec.offsetTop));
-}
-addEventListener('scroll',onScroll,{passive:true});
-addEventListener('resize',()=>{layoutKnots();onScroll();});
-layoutKnots(); onScroll();
 
 /* ============ slovníček ============ */
 const TERMS = [
@@ -625,7 +660,7 @@ const TERMS = [
 ];
 const chipsEl = document.getElementById('chips');
 const defbox = document.getElementById('defbox');
-TERMS.forEach(([t,d],i)=>{
+TERMS.forEach(([t,d])=>{
   const b=document.createElement('button');
   b.className='chip'; b.textContent=t;
   b.addEventListener('click',()=>{
@@ -637,7 +672,7 @@ TERMS.forEach(([t,d],i)=>{
 });
 
 /* easter egg */
-console.log('%ckoukáš pod kapotu? správně. ship it. 🍻','color:#d1240f;font-size:14px;font-family:monospace');
+console.log('%ckoukáš pod kapotu? správně. ship it. 🍻','color:#131313;background:#ffe600;padding:2px 8px;font-size:14px;font-family:monospace');
 </script>
 </body>
 </html>
